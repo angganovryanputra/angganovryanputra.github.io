@@ -11,8 +11,6 @@ const nextConfig = {
   images: {
     unoptimized: true
   },
-  basePath: process.env.NODE_ENV === 'production' ? '/cybersec-portfolio' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/cybersec-portfolio/' : '',
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {

@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import { JetBrains_Mono } from "next/font/google"
 import "./globals.css"
@@ -19,8 +19,12 @@ export const metadata: Metadata = {
   keywords:
     "cybersecurity, SOC analyst, penetration testing, security researcher, threat hunting, SIEM, incident response",
   authors: [{ name: "Angga Novryan Putra F." }],
-  viewport: "width=device-width, initial-scale=1",
-    generator: 'v0.dev'
+  generator: 'mxz4rt-sec'
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 }
 
 export default function RootLayout({

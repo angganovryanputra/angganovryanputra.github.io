@@ -347,3 +347,87 @@ export class AdvancedSearchEngine {
     return results.sort((a, b) => b.relevanceScore - a.relevanceScore)
   }
 }
+
+import { getAllNotes, type NoteData } from './notes';
+import { fetchMediumPosts, type MediumPost } from './medium-rss';
+
+function generateSnippet(content: string, query: string): string {
+  const lowerContent = content.toLowerCase();
+  const lowerQuery = query.toLowerCase();
+  const index = lowerContent.indexOf(lowerQuery);
+
+  if (index === -1) {
+    return content.substring(0, 150) + '...';
+  }
+
+  const start = Math.max(0, index - 50);
+  const end = Math.min(content.length, index + lowerQuery.length + 50);
+  const snippet = content.substring(start, end);
+
+  return (start > 0 ? '...' : '') + snippet.replace(new RegExp(query, 'gi'), (match) => `**${match}**`) + (end < content.length ? '...' : '');
+}
+
+export async function performAdvancedSearch(query: string): Promise<SearchResult[]> {
+  if (!query) {
+    return [];
+  }
+
+  try {
+    const [notes, mediumPosts] = await Promise.all([
+      getAllNotes(),
+      fetchMediumPosts('angganvryn'),
+    ]);
+
+    const allContent: SearchResult[] = [];
+
+    // Process local notes
+    notes.forEach((note: NoteData) => {
+      allContent.push({
+        id: note.id,
+        title: note.title,
+        content: note.content,
+        url: `/notes/${note.slug}`,
+        type: 'notes',
+        relevanceScore: 0, // Placeholder
+        matchedKeywords: [], // Placeholder
+        intent: { type: 'technical', confidence: 0.8 }, // Placeholder
+        snippet: generateSnippet(note.content, query),
+        publishedDate: note.date,
+        author: 'Angga Novryan Putra F.',
+        tags: note.tags,
+      });
+    });
+
+    // Process Medium posts
+    mediumPosts.forEach((post: MediumPost) => {
+      allContent.push({
+        id: post.guid,
+        title: post.title,
+        content: post.description,
+        url: post.link,
+        type: 'medium',
+        relevanceScore: 0, // Placeholder
+        matchedKeywords: [], // Placeholder
+        intent: { type: 'educational', confidence: 0.8 }, // Placeholder
+        snippet: generateSnippet(post.description, query),
+        publishedDate: post.pubDate,
+        author: post.author,
+        tags: post.categories,
+      });
+    });
+
+    // Filter results
+    const lowerCaseQuery = query.toLowerCase();
+    const filteredResults = allContent.filter(
+      (item) =>
+        item.title.toLowerCase().includes(lowerCaseQuery) ||
+        item.content.toLowerCase().includes(lowerCaseQuery)
+    );
+
+    // TODO: Implement relevance scoring and keyword matching
+    return filteredResults;
+  } catch (error) {
+    console.error('Advanced search failed:', error);
+    return []; // Return empty array on error to prevent UI crash
+  }
+}

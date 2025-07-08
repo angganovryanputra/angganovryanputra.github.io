@@ -3,129 +3,72 @@
 import { useState, useEffect, useCallback } from "react"
 import { Search, X, Clock, FileText, ExternalLink, Zap } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { enhancedMediumSearch, type SearchResult } from "@/lib/enhanced-medium-search"
-import { obsidianNotesManager } from "@/lib/obsidian-notes"
-import { SecurityValidator, SecurityLogger } from "@/lib/security-utils"
-import Link from "next/link"
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+
+interface SearchEntry {
+  id: string;
+  title: string;
+  content: string;
+  url: string;
+  type: 'notes' | 'medium';
+  tags: string[];
+}
 
 interface AdvancedSearchProps {
-  isOpen: boolean
+  isOpen: boolean;
   onClose: () => void
 }
 
 export function AdvancedSearch({ isOpen, onClose }: AdvancedSearchProps) {
   const [query, setQuery] = useState("")
-  const [results, setResults] = useState<SearchResult[]>([])
+  const [results, setResults] = useState<SearchEntry[]>([])
   const [loading, setLoading] = useState(false)
-  const [searchStats, setSearchStats] = useState<{
-    totalResults: number
-    searchTime: number
-    sources: string[]
-  } | null>(null)
-
-  const performSearch = useCallback(async (searchQuery: string) => {
-    if (!searchQuery.trim()) {
-      setResults([])
-      setSearchStats(null)
-      return
-    }
-
-    // Security validation and rate limiting
-    const sanitizedQuery = SecurityValidator.sanitizeSearchQuery(searchQuery)
-    if (!sanitizedQuery) {
-      SecurityLogger.log("warn", "Invalid search query blocked", { query: searchQuery })
-      return
-    }
-
-    const clientId = typeof window !== "undefined" ? window.navigator.userAgent.slice(0, 50) : "server"
-
-    if (!SecurityValidator.checkSearchRateLimit(clientId)) {
-      SecurityLogger.log("warn", "Search rate limit exceeded", { clientId })
-      return
-    }
-
-    setLoading(true)
-    const startTime = Date.now()
-
-    try {
-      const [mediumResults, notesResults] = await Promise.all([
-        enhancedMediumSearch.searchArticles(sanitizedQuery),
-        obsidianNotesManager.searchNotes(sanitizedQuery),
-      ])
-
-      // Convert notes to search results
-      const notesSearchResults: SearchResult[] = notesResults.map((note) => ({
-        id: note.id,
-        title: note.title,
-        excerpt: note.excerpt,
-        url: `/notes/${note.slug}`,
-        source: "notes",
-        relevanceScore: 0.8,
-        confidence: 0.9,
-        matchedKeywords: [],
-        intent: "educational",
-        category: note.category || "documentation",
-        tags: note.tags,
-        lastModified: note.lastModified,
-      }))
-
-      const combinedResults = [...mediumResults, ...notesSearchResults]
-        .sort((a, b) => b.relevanceScore - a.relevanceScore)
-        .slice(0, 20)
-
-      const searchTime = Date.now() - startTime
-      const sources = [...new Set(combinedResults.map((r) => r.source))]
-
-      setResults(combinedResults)
-      setSearchStats({
-        totalResults: combinedResults.length,
-        searchTime,
-        sources,
-      })
-
-      SecurityLogger.log("info", "Search completed", {
-        query: sanitizedQuery,
-        resultsCount: combinedResults.length,
-        searchTime,
-      })
-    } catch (error) {
-      SecurityLogger.log("error", "Search failed", { query: sanitizedQuery, error })
-      setResults([])
-      setSearchStats(null)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  const [error, setError] = useState<string | null>(null)
+  const [searchIndex, setSearchIndex] = useState<SearchEntry[]>([])
+  const [isIndexLoaded, setIsIndexLoaded] = useState(false)
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (query.trim()) {
-        performSearch(query)
-      }
-    }, 300)
-
-    return () => clearTimeout(timeoutId)
-  }, [query, performSearch])
+    if (isOpen && !isIndexLoaded) {
+      setLoading(true)
+      fetch('/search-index.json')
+        .then((res) => res.json())
+        .then((data) => {
+          setSearchIndex(data)
+          setIsIndexLoaded(true)
+        })
+        .catch((err) => {
+          console.error('Failed to load search index:', err)
+          setError('Could not load search data.')
+        })
+        .finally(() => {
+          setLoading(false)
+        })
+    }
+  }, [isOpen, isIndexLoaded])
 
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
-        event.preventDefault()
-        if (!isOpen) {
-          // This would be handled by the parent component
-        }
-      }
-      if (event.key === "Escape" && isOpen) {
-        onClose()
-      }
+    if (!query || !isIndexLoaded) {
+      setResults([])
+      return
     }
 
-    document.addEventListener("keydown", handleKeyDown)
-    return () => document.removeEventListener("keydown", handleKeyDown)
-  }, [isOpen, onClose])
+    const lowerCaseQuery = query.toLowerCase()
+    const filteredResults = searchIndex.filter(
+      (item) =>
+        item.title.toLowerCase().includes(lowerCaseQuery) ||
+        item.content.toLowerCase().includes(lowerCaseQuery) ||
+        (item.tags && item.tags.some(tag => tag.toLowerCase().includes(lowerCaseQuery)))
+    )
+    setResults(filteredResults)
+
+  }, [query, searchIndex, isIndexLoaded])
+
+  const handleResultClick = () => {
+    onClose()
+  }
 
   const getSourceIcon = (source: string) => {
     switch (source) {
@@ -183,28 +126,6 @@ export function AdvancedSearch({ isOpen, onClose }: AdvancedSearchProps) {
             )}
           </div>
 
-          {/* Search Stats */}
-          {searchStats && (
-            <div className="flex items-center gap-4 text-sm text-green-300 bg-green-900/20 border border-green-400/30 p-3 rounded">
-              <div className="flex items-center gap-1">
-                <Search className="w-4 h-4" />
-                {searchStats.totalResults} results
-              </div>
-              <div className="flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                {searchStats.searchTime}ms
-              </div>
-              <div className="flex items-center gap-2">
-                Sources:
-                {searchStats.sources.map((source) => (
-                  <Badge key={source} className={getSourceColor(source)}>
-                    {source}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Loading State */}
           {loading && (
             <div className="flex items-center justify-center py-8">
@@ -224,25 +145,22 @@ export function AdvancedSearch({ isOpen, onClose }: AdvancedSearchProps) {
                   <div className="flex-1">
                     <Link
                       href={result.url}
-                      onClick={onClose}
+                      onClick={handleResultClick}
                       className="text-green-400 hover:text-green-300 font-semibold text-sm md:text-base"
                     >
                       {result.title}
                     </Link>
                     <div className="flex items-center gap-2 mt-1">
-                      <Badge className={getSourceColor(result.source)}>
-                        {getSourceIcon(result.source)}
-                        <span className="ml-1">{result.source}</span>
+                      <Badge className={getSourceColor(result.type)}>
+                        {getSourceIcon(result.type)}
+                        <span className="ml-1">{result.type}</span>
                       </Badge>
-                      {result.category && (
-                        <Badge className="bg-yellow-400/20 text-yellow-400 border-yellow-400">{result.category}</Badge>
-                      )}
-                      <div className="text-xs text-green-300">Score: {(result.relevanceScore * 100).toFixed(0)}%</div>
+                      <div className="text-xs text-green-300">Score: </div>
                     </div>
                   </div>
                 </div>
 
-                <p className="text-green-300 text-sm mb-3 line-clamp-2">{result.excerpt}</p>
+                <p className="text-green-300 text-sm mb-3 line-clamp-2">{result.content}</p>
 
                 {result.tags && result.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1">

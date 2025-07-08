@@ -1,162 +1,58 @@
 "use client"
 
-import type React from "react"
-
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import remarkBreaks from "remark-breaks"
 import rehypeHighlight from "rehype-highlight"
 import rehypeSlug from "rehype-slug"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
-import Image from "next/image"
-import { Copy, Check, ImageIcon } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import "highlight.js/styles/github-dark.css"
-import type { JSX } from "react"
-
-/**
- * MarkdownRenderer
- * ----------------
- * • Supports GFM, tables, strikethrough, emoji, fenced code blocks
- * • Syntax–highlighting provided by highlight.js via rehype-highlight
- * • Adds smooth-scroll heading links
- * • Handles local image references (`/images/**`) + remote images
- * • Copy-to-clipboard button on fenced code blocks
- * • Fully static -- works on GitHub Pages
- */
 
 interface MarkdownRendererProps {
   content: string
   className?: string
 }
 
-/* -------------------------------------------------------------------------- */
-/*                               Code block UI                                */
-/* -------------------------------------------------------------------------- */
-
-function CodeBlock({ className, children, ...props }: React.HTMLAttributes<HTMLElement>) {
-  // `className` will look like "language-ts" or undefined
-  const language = className?.replace("language-", "") ?? "txt"
-  const [copied, setCopied] = useState(false)
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(String(children).trim())
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1_800)
-    } catch {
-      /* ignore */
-    }
-  }
-
-  return (
-    <div className="relative group my-4">
-      {/* copy button */}
-      <Button
-        aria-label="Copy code"
-        size="icon"
-        variant="ghost"
-        onClick={handleCopy}
-        className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 text-green-400 hover:text-green-300"
-      >
-        {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-      </Button>
-
-      <pre
-        className={cn(
-          "overflow-x-auto rounded-lg border border-green-400/20 bg-black/50 !p-4 font-mono text-sm",
-          className,
-        )}
-        {...props}
-      >
-        <code className={className}>{children}</code>
-      </pre>
-      {/* language label */}
-      <span className="absolute bottom-1 right-3 select-none text-[10px] uppercase tracking-widest text-green-500/60">
-        {language}
-      </span>
-    </div>
-  )
-}
-
-/* -------------------------------------------------------------------------- */
-/*                            Image component UI                              */
-/* -------------------------------------------------------------------------- */
-
-function MarkdownImage({
-  alt,
-  src,
-}: {
-  alt?: string
-  src?: string
-}): JSX.Element {
-  const [isError, setIsError] = useState(false)
-
-  // Normalise image paths
-  const resolvedSrc = (() => {
-    if (!src) return "/placeholder.svg"
-    if (src.startsWith("http")) return src
-    if (src.startsWith("/")) return src
-    return `/images/${src}`
-  })()
-
-  if (isError)
-    return (
-      <div className="my-6 flex flex-col items-center justify-center gap-2 rounded-lg border border-green-400/30 bg-black/50 p-6 text-center">
-        <ImageIcon className="h-10 w-10 text-green-400/60" />
-        <p className="text-sm text-green-300/80">Image failed to load</p>
-        <code className="break-all text-xs text-green-400/70">{src}</code>
-      </div>
-    )
-
-  return (
-    <figure className="my-8">
-      <Image
-        src={resolvedSrc || "/placeholder.svg"}
-        alt={alt ?? ""}
-        width={900}
-        height={600}
-        className="mx-auto rounded-md border border-green-400/20"
-        unoptimized /* required for static export */
-        onError={() => setIsError(true)}
-      />
-      {alt && <figcaption className="mt-2 text-center text-sm italic text-green-300/70">{alt}</figcaption>}
-    </figure>
-  )
-}
-
-/* -------------------------------------------------------------------------- */
-/*                            Main MarkdownRenderer                           */
-/* -------------------------------------------------------------------------- */
-
 export function MarkdownRenderer({ content, className }: MarkdownRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
-  /* Smooth-scroll for autolinked headings */
+  // Add smooth scrolling behavior to generated heading links
   useEffect(() => {
-    const el = containerRef.current
-    if (!el) return
-    const onClick = (e: MouseEvent) => {
-      const target = e.target as HTMLAnchorElement
-      if (target.tagName === "A" && target.hash && target.getAttribute("aria-label") === "heading-link") {
+    const container = containerRef.current
+    if (!container) return
+
+    const handleClick = (e: Event) => {
+      const target = e.target as HTMLElement
+      if (target.tagName === "A" && target.getAttribute("href")?.startsWith("#")) {
         e.preventDefault()
-        const id = target.hash.replace("#", "")
-        const header = document.getElementById(id)
-        if (header) {
-          const offset = header.getBoundingClientRect().top + window.scrollY - 80
-          window.scrollTo({ top: offset, behavior: "smooth" })
-          history.replaceState(null, "", target.hash)
+        const id = target.getAttribute("href")?.slice(1)
+        if (id) {
+          const element = document.getElementById(id)
+          if (element) {
+            const headerOffset = 80
+            const elementPosition = element.getBoundingClientRect().top
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: "smooth",
+            })
+
+            // Update URL hash
+            history.replaceState(null, "", `#${id}`)
+          }
         }
       }
     }
-    el.addEventListener("click", onClick)
-    return () => el.removeEventListener("click", onClick)
-  }, [])
+
+    container.addEventListener("click", handleClick)
+    return () => container.removeEventListener("click", handleClick)
+  }, [content])
 
   return (
-    <div ref={containerRef} className={cn("prose prose-invert prose-green max-w-none", className)}>
+    <div ref={containerRef} className={cn("markdown-content", className)}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkBreaks]}
         rehypePlugins={[
@@ -167,29 +63,159 @@ export function MarkdownRenderer({ content, className }: MarkdownRendererProps) 
             {
               behavior: "wrap",
               properties: {
-                className: "heading-link",
-                ariaLabel: "heading-link",
+                className: ["heading-link"],
+                ariaLabel: "Link to heading",
               },
             },
           ],
         ]}
         components={{
-          code: CodeBlock,
-          img: MarkdownImage,
-          /* tweak heading colours */
-          h1: ({ node, ...props }) => <h1 {...props} className="text-3xl font-bold text-green-400" />,
-          h2: ({ node, ...props }) => <h2 {...props} className="text-2xl font-bold text-green-400" />,
-          h3: ({ node, ...props }) => <h3 {...props} className="text-xl font-bold text-green-400" />,
-          p: ({ node, ...props }) => <p {...props} className="text-green-300 leading-relaxed" />,
-          a: ({ node, href, ...props }) => (
-            /* external links open in new tab */
-            <a
+          h1: ({ children, id, ...props }) => (
+            <h1
+              id={id}
+              className="text-3xl font-bold text-green-400 mb-6 mt-8 first:mt-0 scroll-mt-20 group"
               {...props}
+            >
+              {children}
+            </h1>
+          ),
+          h2: ({ children, id, ...props }) => (
+            <h2 id={id} className="text-2xl font-bold text-green-400 mb-4 mt-8 scroll-mt-20 group" {...props}>
+              {children}
+            </h2>
+          ),
+          h3: ({ children, id, ...props }) => (
+            <h3 id={id} className="text-xl font-bold text-green-400 mb-3 mt-6 scroll-mt-20 group" {...props}>
+              {children}
+            </h3>
+          ),
+          h4: ({ children, id, ...props }) => (
+            <h4 id={id} className="text-lg font-bold text-green-400 mb-2 mt-4 scroll-mt-20 group" {...props}>
+              {children}
+            </h4>
+          ),
+          h5: ({ children, id, ...props }) => (
+            <h5 id={id} className="text-base font-bold text-green-400 mb-2 mt-4 scroll-mt-20 group" {...props}>
+              {children}
+            </h5>
+          ),
+          h6: ({ children, id, ...props }) => (
+            <h6 id={id} className="text-sm font-bold text-green-400 mb-2 mt-4 scroll-mt-20 group" {...props}>
+              {children}
+            </h6>
+          ),
+          p: ({ children, ...props }) => (
+            <p className="text-green-300 mb-4 leading-relaxed" {...props}>
+              {children}
+            </p>
+          ),
+          ul: ({ children, ...props }) => (
+            <ul className="text-green-300 mb-4 ml-6 space-y-2 list-disc" {...props}>
+              {children}
+            </ul>
+          ),
+          ol: ({ children, ...props }) => (
+            <ol className="text-green-300 mb-4 ml-6 space-y-2 list-decimal" {...props}>
+              {children}
+            </ol>
+          ),
+          li: ({ children, ...props }) => (
+            <li className="text-green-300 leading-relaxed" {...props}>
+              {children}
+            </li>
+          ),
+          blockquote: ({ children, ...props }) => (
+            <blockquote
+              className="border-l-4 border-green-400 pl-4 py-2 my-4 bg-green-400/5 text-green-300 italic"
+              {...props}
+            >
+              {children}
+            </blockquote>
+          ),
+          code: ({ inline, className, children, ...props }) => {
+            if (inline) {
+              return (
+                <code
+                  className="bg-green-400/10 text-green-300 px-1.5 py-0.5 rounded text-sm font-mono border border-green-400/20"
+                  {...props}
+                >
+                  {children}
+                </code>
+              )
+            }
+            return (
+              <code
+                className={cn(
+                  "block bg-black/50 text-green-300 p-4 rounded-lg overflow-x-auto font-mono text-sm border border-green-400/20",
+                  className,
+                )}
+                {...props}
+              >
+                {children}
+              </code>
+            )
+          },
+          pre: ({ children, ...props }) => (
+            <pre className="bg-black/50 border border-green-400/20 rounded-lg overflow-x-auto mb-4" {...props}>
+              {children}
+            </pre>
+          ),
+          a: ({ children, href, ...props }) => (
+            <a
               href={href}
-              className="text-cyan-400 underline hover:text-cyan-300"
+              className="text-cyan-400 hover:text-cyan-300 underline underline-offset-2 transition-colors"
               target={href?.startsWith("http") ? "_blank" : undefined}
               rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
+              {...props}
+            >
+              {children}
+            </a>
+          ),
+          img: ({ src, alt, ...props }) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img 
+              src={src} 
+              alt={alt} 
+              className="rounded-lg border border-green-400/20 my-6 max-w-full h-auto mx-auto shadow-lg"
+              {...props} 
             />
+          ),
+          table: ({ children, ...props }) => (
+            <div className="overflow-x-auto mb-4">
+              <table className="min-w-full border border-green-400/30 rounded-lg overflow-hidden" {...props}>{
+                children}
+              </table>
+            </div>
+          ),
+          thead: ({ children, ...props }) => (
+            <thead className="bg-green-400/10" {...props}>{
+              children}
+            </thead>
+          ),
+          th: ({ children, id, ...props }) => (
+            <th
+              id={id}
+              className="px-4 py-2 text-left text-green-400 font-semibold border-b border-green-400/30"
+              {...props}
+            >
+              {children}
+            </th>
+          ),
+          td: ({ children, ...props }) => (
+            <td className="px-4 py-2 text-green-300 border-b border-green-400/20" {...props}>{
+              children}
+            </td>
+          ),
+          hr: ({ ...props }) => <hr className="border-green-400/30 my-8" {...props} />,
+          strong: ({ children, ...props }) => (
+            <strong className="text-green-400 font-semibold" {...props}>{
+              children}
+            </strong>
+          ),
+          em: ({ children, ...props }) => (
+            <em className="text-green-300 italic" {...props}>{
+              children}
+            </em>
           ),
         }}
       >

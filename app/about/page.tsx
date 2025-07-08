@@ -102,7 +102,7 @@ export default function AboutPage() {
     {
       name: "GitHub",
       icon: Github,
-      url: "https://github.com/angganovryan",
+      url: "https://github.com/angganovryanputra",
       color: "text-gray-400 hover:text-gray-300",
       bgColor: "hover:bg-gray-400/10",
       description: "View my code repositories and projects",
@@ -110,7 +110,7 @@ export default function AboutPage() {
     {
       name: "LinkedIn",
       icon: Linkedin,
-      url: "https://linkedin.com/in/angganovryan",
+      url: "https://linkedin.com/in/angganovryanputra",
       color: "text-blue-400 hover:text-blue-300",
       bgColor: "hover:bg-blue-400/10",
       description: "Connect with me professionally",
@@ -118,7 +118,7 @@ export default function AboutPage() {
     {
       name: "X (Twitter)",
       icon: XIcon,
-      url: "https://x.com/angganovryan",
+      url: "https://x.com/angganvryn",
       color: "text-white hover:text-gray-300",
       bgColor: "hover:bg-white/10",
       description: "Follow my thoughts and updates",
@@ -126,7 +126,7 @@ export default function AboutPage() {
     {
       name: "Instagram",
       icon: Instagram,
-      url: "https://instagram.com/angganovryan",
+      url: "https://instagram.com/angga.npf",
       color: "text-pink-400 hover:text-pink-300",
       bgColor: "hover:bg-pink-400/10",
       description: "See my personal moments",
