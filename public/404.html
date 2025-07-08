@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | Angga Cybersec</title>
+    <style>
+        body {
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            text-align: center;
+            border: 1px solid #00ff00;
+            padding: 2rem;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.9);
+        }
+        .error-code {
+            font-size: 4rem;
+            color: #ff0000;
+            margin-bottom: 1rem;
+        }
+        .error-message {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .home-link {
+            color: #00ff00;
+            text-decoration: none;
+            border: 1px solid #00ff00;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        .home-link:hover {
+            background: #00ff00;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error-code">404</div>
+        <div class="error-message">$ ls: cannot access 'page': No such file or directory</div>
+        <a href="/" class="home-link">$ cd /home</a>
+    </div>
+    <script>
+        // Redirect to home page for SPA routing
+        if (window.location.pathname !== '/404.html') {
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>
