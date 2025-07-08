@@ -1,0 +1,183 @@
+3:I[4487,[],""]
+5:I[4492,[],""]
+6:I[8734,["693","static/chunks/693-1f8755bf977c5b75.js","160","static/chunks/app/not-found-419e871fafdc9eeb.js"],"default"]
+4:["slug","penetration-testing/methodology","c"]
+0:["pyuBZ9N1vU8vE4N0Fmj2K",[[["",{"children":["notes",{"children":[["slug","penetration-testing/methodology","c"],{"children":["__PAGE__?{\"slug\":[\"penetration-testing\",\"methodology\"]}",{}]}]}]},"$undefined","$undefined",true],["",{"children":["notes",{"children":[["slug","penetration-testing/methodology","c"],{"children":["__PAGE__",{},[["$L1","$L2",[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/5eacd01f773eed7f.css","precedence":"next","crossOrigin":"$undefined"}]]],null],null]},[null,["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children","notes","children","$4","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]],null]},[null,["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children","notes","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]],[["$","div",null,{"className":"flex justify-center items-center min-h-screen","children":["$","svg",null,{"xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-loader-circle h-16 w-16 animate-spin text-green-400","children":[["$","path","13zald",{"d":"M21 12a9 9 0 1 1-6.219-8.56"}],"$undefined"]}]}],[],[]]]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/d4c7457d142ee5a7.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/09949203c0d5e76c.css","precedence":"next","crossOrigin":"$undefined"}]],["$","html",null,{"lang":"en","children":["$","body",null,{"className":"__className_e8ce0c __className_898c26","children":["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":["$","$L6",null,{}],"notFoundStyles":[]}]}]}]],null],null],["$L7",null]]]]
+8:I[8749,["693","static/chunks/693-1f8755bf977c5b75.js","858","static/chunks/858-f61b4743aff33f86.js","773","static/chunks/773-580cb1f8a1f90012.js","252","static/chunks/252-460f3a08f34ff2b3.js","969","static/chunks/app/notes/%5B...slug%5D/page-4fd5c8074d493f6a.js"],"MatrixRain"]
+9:I[2252,["693","static/chunks/693-1f8755bf977c5b75.js","858","static/chunks/858-f61b4743aff33f86.js","773","static/chunks/773-580cb1f8a1f90012.js","252","static/chunks/252-460f3a08f34ff2b3.js","969","static/chunks/app/notes/%5B...slug%5D/page-4fd5c8074d493f6a.js"],"Navigation"]
+a:I[3437,["693","static/chunks/693-1f8755bf977c5b75.js","858","static/chunks/858-f61b4743aff33f86.js","773","static/chunks/773-580cb1f8a1f90012.js","252","static/chunks/252-460f3a08f34ff2b3.js","969","static/chunks/app/notes/%5B...slug%5D/page-4fd5c8074d493f6a.js"],"NoteViewerClient"]
+b:T16e8,
+# Penetration Testing Methodology
+
+## Overview
+
+Penetration testing is a systematic approach to evaluating the security of an IT infrastructure by safely attempting to exploit vulnerabilities. This methodology follows industry standards and best practices.
+
+## Testing Phases
+
+### 1. Planning and Reconnaissance
+
+#### Scope Definition
+- **Target Systems**: Define which systems, networks, and applications are in scope
+- **Testing Methods**: Determine black box, white box, or gray box approach
+- **Rules of Engagement**: Establish testing boundaries and restrictions
+- **Timeline**: Set testing schedule and milestones
+
+#### Information Gathering (OSINT)
+- **Passive Reconnaissance**: Gather information without direct interaction
+  - DNS enumeration
+  - WHOIS lookups
+  - Social media research
+  - Public records search
+- **Active Reconnaissance**: Direct interaction with target systems
+  - Port scanning
+  - Service enumeration
+  - Banner grabbing
+  - Network mapping
+
+### 2. Scanning and Enumeration
+
+#### Network Discovery
+\`\`\`bash
+# Network sweep
+nmap -sn 192.168.1.0/24
+
+# Port scanning
+nmap -sS -sV -O target.com
+
+# Service enumeration
+nmap -sC -sV -p- target.com
+
+# UDP scanning
+nmap -sU --top-ports 1000 target.com
+\`\`\`
+
+#### Vulnerability Scanning
+- **Automated Tools**: Nessus, OpenVAS, Qualys
+- **Manual Testing**: Custom scripts and techniques
+- **Web Application Scanning**: Burp Suite, OWASP ZAP
+- **Database Scanning**: SQLMap, NoSQLMap
+
+### 3. Gaining Access
+
+#### Exploitation Techniques
+- **Network Exploits**: Buffer overflows, protocol vulnerabilities
+- **Web Application Exploits**: SQL injection, XSS, CSRF
+- **Social Engineering**: Phishing, pretexting, physical access
+- **Password Attacks**: Brute force, dictionary attacks, credential stuffing
+
+#### Common Exploitation Tools
+\`\`\`bash
+# Metasploit Framework
+msfconsole
+use exploit/windows/smb/ms17_010_eternalblue
+set RHOSTS target_ip
+exploit
+
+# SQL Injection with SQLMap
+sqlmap -u "http://target.com/page.php?id=1" --dbs
+
+# Web shell upload
+curl -X POST -F "file=@shell.php" http://target.com/upload.php
+\`\`\`
+
+### 4. Maintaining Access
+
+#### Persistence Mechanisms
+- **Backdoors**: Hidden access points for future entry
+- **Rootkits**: Stealth tools to maintain system access
+- **Scheduled Tasks**: Automated execution of malicious code
+- **Registry Modifications**: Windows persistence techniques
+
+#### Privilege Escalation
+- **Local Privilege Escalation**: Exploit local vulnerabilities
+- **Domain Privilege Escalation**: Active Directory attacks
+- **Kernel Exploits**: Operating system vulnerabilities
+- **Misconfiguration Abuse**: Weak permissions and settings
+
+### 5. Analysis and Reporting
+
+#### Evidence Collection
+- **Screenshots**: Visual proof of successful exploitation
+- **Log Files**: System and application logs
+- **Network Captures**: Packet analysis and traffic flows
+- **Command Output**: Results of executed commands
+
+#### Risk Assessment
+- **CVSS Scoring**: Common Vulnerability Scoring System
+- **Business Impact**: Potential damage to organization
+- **Exploitability**: Ease of exploitation
+- **Remediation Effort**: Cost and complexity of fixes
+
+## OWASP Top 10 Testing
+
+### 1. Injection Flaws
+- **SQL Injection**: Database query manipulation
+- **NoSQL Injection**: NoSQL database attacks
+- **LDAP Injection**: Directory service attacks
+- **Command Injection**: Operating system command execution
+
+### 2. Broken Authentication
+- **Session Management**: Session fixation, hijacking
+- **Password Security**: Weak passwords, storage issues
+- **Multi-factor Authentication**: Bypass techniques
+- **Account Lockout**: Brute force protection testing
+
+### 3. Sensitive Data Exposure
+- **Data in Transit**: Unencrypted communications
+- **Data at Rest**: Unencrypted storage
+- **Backup Security**: Unsecured backup files
+- **Log Security**: Sensitive information in logs
+
+## Tools and Frameworks
+
+### Network Testing
+- **Nmap**: Network discovery and port scanning
+- **Masscan**: High-speed port scanner
+- **Zmap**: Internet-wide network scanner
+- **Unicornscan**: Asynchronous network scanner
+
+### Web Application Testing
+- **Burp Suite**: Comprehensive web application testing
+- **OWASP ZAP**: Open-source web application scanner
+- **Nikto**: Web server scanner
+- **Dirb/Dirbuster**: Directory and file brute forcing
+
+### Exploitation Frameworks
+- **Metasploit**: Comprehensive penetration testing framework
+- **Cobalt Strike**: Advanced threat emulation platform
+- **Empire**: PowerShell post-exploitation framework
+- **BeEF**: Browser exploitation framework
+
+### Post-Exploitation
+- **Mimikatz**: Windows credential extraction
+- **BloodHound**: Active Directory attack path analysis
+- **PowerSploit**: PowerShell post-exploitation toolkit
+- **LinEnum**: Linux enumeration script
+
+## Reporting Best Practices
+
+### Executive Summary
+- **High-level Overview**: Non-technical summary for management
+- **Risk Rating**: Overall security posture assessment
+- **Key Findings**: Most critical vulnerabilities
+- **Business Impact**: Potential consequences of exploitation
+
+### Technical Details
+- **Vulnerability Descriptions**: Detailed technical explanations
+- **Proof of Concept**: Step-by-step exploitation procedures
+- **Evidence**: Screenshots, logs, and command output
+- **CVSS Scores**: Standardized vulnerability ratings
+
+### Remediation Recommendations
+- **Immediate Actions**: Critical fixes requiring urgent attention
+- **Short-term Solutions**: Fixes to implement within 30 days
+- **Long-term Improvements**: Strategic security enhancements
+- **Compensating Controls**: Temporary risk mitigation measures
+
+## Conclusion
+
+Effective penetration testing requires a systematic approach, proper tooling, and comprehensive reporting. Regular testing helps organizations identify and address security weaknesses before they can be exploited by malicious actors.
+2:["$","div",null,{"className":"min-h-screen bg-black text-green-400 font-mono relative overflow-hidden","children":[["$","$L8",null,{}],["$","div",null,{"className":"relative z-10","children":[["$","$L9",null,{}],["$","$La",null,{"note":{"id":"penetration-testing/methodology","slug":"penetration-testing/methodology","contentHtml":"","toc":[{"level":1,"text":"Penetration Testing Methodology","slug":"penetration-testing-methodology"},{"level":2,"text":"Overview","slug":"overview"},{"level":2,"text":"Testing Phases","slug":"testing-phases"},{"level":3,"text":"1. Planning and Reconnaissance","slug":"1-planning-and-reconnaissance"},{"level":4,"text":"Scope Definition","slug":"scope-definition"},{"level":4,"text":"Information Gathering (OSINT)","slug":"information-gathering-osint"},{"level":3,"text":"2. Scanning and Enumeration","slug":"2-scanning-and-enumeration"},{"level":4,"text":"Network Discovery","slug":"network-discovery"},{"level":1,"text":"Network sweep","slug":"network-sweep"},{"level":1,"text":"Port scanning","slug":"port-scanning"},{"level":1,"text":"Service enumeration","slug":"service-enumeration"},{"level":1,"text":"UDP scanning","slug":"udp-scanning"},{"level":4,"text":"Vulnerability Scanning","slug":"vulnerability-scanning"},{"level":3,"text":"3. Gaining Access","slug":"3-gaining-access"},{"level":4,"text":"Exploitation Techniques","slug":"exploitation-techniques"},{"level":4,"text":"Common Exploitation Tools","slug":"common-exploitation-tools"},{"level":1,"text":"Metasploit Framework","slug":"metasploit-framework"},{"level":1,"text":"SQL Injection with SQLMap","slug":"sql-injection-with-sqlmap"},{"level":1,"text":"Web shell upload","slug":"web-shell-upload"},{"level":3,"text":"4. Maintaining Access","slug":"4-maintaining-access"},{"level":4,"text":"Persistence Mechanisms","slug":"persistence-mechanisms"},{"level":4,"text":"Privilege Escalation","slug":"privilege-escalation"},{"level":3,"text":"5. Analysis and Reporting","slug":"5-analysis-and-reporting"},{"level":4,"text":"Evidence Collection","slug":"evidence-collection"},{"level":4,"text":"Risk Assessment","slug":"risk-assessment"},{"level":2,"text":"OWASP Top 10 Testing","slug":"owasp-top-10-testing"},{"level":3,"text":"1. Injection Flaws","slug":"1-injection-flaws"},{"level":3,"text":"2. Broken Authentication","slug":"2-broken-authentication"},{"level":3,"text":"3. Sensitive Data Exposure","slug":"3-sensitive-data-exposure"},{"level":2,"text":"Tools and Frameworks","slug":"tools-and-frameworks"},{"level":3,"text":"Network Testing","slug":"network-testing"},{"level":3,"text":"Web Application Testing","slug":"web-application-testing"},{"level":3,"text":"Exploitation Frameworks","slug":"exploitation-frameworks"},{"level":3,"text":"Post-Exploitation","slug":"post-exploitation"},{"level":2,"text":"Reporting Best Practices","slug":"reporting-best-practices"},{"level":3,"text":"Executive Summary","slug":"executive-summary"},{"level":3,"text":"Technical Details","slug":"technical-details"},{"level":3,"text":"Remediation Recommendations","slug":"remediation-recommendations"},{"level":2,"text":"Conclusion","slug":"conclusion"}],"content":"$b","title":"Penetration Testing Methodology","date":"2024-01-20","category":"Penetration Testing","tags":["pentest","methodology","security-testing","vulnerability"],"author":"Security Professional"}}]]}]]}]
+7:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","1",{"charSet":"utf-8"}],["$","title","2",{"children":"Penetration Testing Methodology"}],["$","meta","3",{"name":"description","content":"A note on Penetration Testing Methodology"}],["$","meta","4",{"name":"author","content":"Angga Novryan Putra F."}],["$","meta","5",{"name":"generator","content":"mxz4rt-sec"}],["$","meta","6",{"name":"keywords","content":"cybersecurity, SOC analyst, penetration testing, security researcher, threat hunting, SIEM, incident response"}],["$","meta","7",{"name":"next-size-adjust"}]]
+1:null
