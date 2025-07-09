@@ -19,6 +19,7 @@ import {
   AlertCircle,
   BookOpen,
   ImageIcon,
+  ChevronLeft,
 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -27,6 +28,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 interface FolderStructure {
   [key: string]: {
@@ -50,6 +52,9 @@ export function NotesClient({ initialNotes }: { initialNotes: NoteSummary[] }) {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set())
   const [searchQuery, setSearchQuery] = useState("")
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const NOTES_PER_PAGE = 10;
 
   useEffect(() => {
     if (initialNotes) {
@@ -132,9 +137,48 @@ export function NotesClient({ initialNotes }: { initialNotes: NoteSummary[] }) {
     })
   }
 
+  const indexOfLastNote = currentPage * NOTES_PER_PAGE;
+  const indexOfFirstNote = indexOfLastNote - NOTES_PER_PAGE;
+  const currentNotes = filteredNotes.slice(indexOfFirstNote, indexOfLastNote);
+  const totalPages = Math.ceil(filteredNotes.length / NOTES_PER_PAGE);
+
+  const handlePageChange = (pageNumber: number) => {
+    if (pageNumber > 0 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
+
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
+
+    return (
+      <div className="mt-8 flex justify-center items-center gap-4 font-mono">
+        <Button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="bg-black/80 border border-green-500/50 hover:bg-green-500/20 disabled:opacity-50"
+        >
+          <ChevronLeft className="w-4 h-4 mr-2" />
+          Previous
+        </Button>
+        <span className="text-green-300">
+          Page {currentPage} of {totalPages}
+        </span>
+        <Button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="bg-black/80 border border-green-500/50 hover:bg-green-500/20 disabled:opacity-50"
+        >
+          Next
+          <ChevronRight className="w-4 h-4 ml-2" />
+        </Button>
+      </div>
+    );
+  };
+
   const renderGridView = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {filteredNotes.map((note: NoteSummary) => (
+      {currentNotes.map((note: NoteSummary) => (
         <Card key={note.id} className="bg-black/80 border-green-400/50 hover:border-green-400 transition-all duration-300 transform hover:-translate-y-1">
           <Link href={`/notes/${note.slug}`} passHref>
             <CardHeader>
@@ -165,7 +209,7 @@ export function NotesClient({ initialNotes }: { initialNotes: NoteSummary[] }) {
 
   const renderListView = () => (
     <div className="space-y-4">
-      {filteredNotes.map((note: NoteSummary) => (
+      {currentNotes.map((note: NoteSummary) => (
         <Card key={note.id} className="bg-black/80 border-green-400/50 hover:border-green-400 transition-all duration-300">
           <Link href={`/notes/${note.slug}`} passHref>
             <div className="p-4 flex items-center justify-between">
@@ -241,7 +285,7 @@ export function NotesClient({ initialNotes }: { initialNotes: NoteSummary[] }) {
         <div className="border-l-2 border-green-500/50 pl-6 relative">
           {notesInYear.map((note: NoteSummary) => (
             <div key={note.id} className="mb-8 relative">
-              <div className="absolute -left-[34px] top-1 w-4 h-4 bg-green-500 rounded-full border-4 border-black"></div>
+              <div className="absolute -left-[34px] top-1/2 -translate-y-1/2 w-4 h-4 bg-green-500 rounded-full border-4 border-black"></div>
               <p className="text-sm text-green-300/70 mb-1">{new Date(note.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</p>
               <Link href={`/notes/${note.slug}`} className="text-lg font-semibold text-green-400 hover:underline">{note.title}</Link>
               <p className="text-sm text-green-300 mt-1">Category: {note.category}</p>
@@ -259,19 +303,29 @@ export function NotesClient({ initialNotes }: { initialNotes: NoteSummary[] }) {
     <div className="min-h-screen bg-black text-green-300 font-mono relative">
       <Navigation />
       <div className="container mx-auto px-4 py-8 pt-24">
-        <header className="text-center mb-12">
-          <h1 className="text-green-400 text-5xl font-bold flex items-center">
-            <BookOpen className="w-6 h-6 mr-3" />
-            Cybersecurity Notes & Research
-          </h1>
-          <p className="text-green-300/70 mt-2">$ tree ./notes --all</p>
+        <header className="relative mb-12 overflow-hidden rounded-lg border border-green-500/30 bg-black/50 p-8 shadow-[0_0_15px_rgba(52,211,153,0.2)]">
+          <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-900/40 to-transparent opacity-50"></div>
+          <div className="absolute top-2 left-2 text-green-500/50 font-mono text-xs">[</div>
+          <div className="absolute top-2 right-2 text-green-500/50 font-mono text-xs">]</div>
+          <div className="absolute bottom-2 left-2 text-green-500/50 font-mono text-xs">]</div>
+          <div className="absolute bottom-2 right-2 text-green-500/50 font-mono text-xs">[</div>
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-green-400 drop-shadow-[0_0_5px_rgba(52,211,153,0.8)] flex items-center justify-center gap-4">
+              <BookOpen className="h-10 w-10" />
+              <span>Cybersecurity Notes & Research</span>
+            </h1>
+            <p className="mt-4 text-lg text-green-300/80 font-mono">
+              $ A collection of findings from the digital trenches.
+            </p>
+          </div>
         </header>
 
         <main>
           {/* Filters and Controls */}
-          <Card className="bg-black/80 border border-green-400/50 p-4 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div>
+          <div className="relative mb-8 rounded-lg border border-green-500/30 bg-black/50 p-6 shadow-[0_0_15px_rgba(52,211,153,0.2)]">
+            <div className="flex flex-col md:flex-row gap-8 items-start">
+              {/* Search Section */}
+              <div className="w-full md:w-1/3">
                 <label htmlFor="search-notes" className="text-cyan-400 text-sm font-bold mb-2 block">
                   Search Notes
                 </label>
@@ -283,36 +337,47 @@ export function NotesClient({ initialNotes }: { initialNotes: NoteSummary[] }) {
                     placeholder="Search by title or keyword..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10"
+                    className="w-full pl-10 bg-black/80 border-green-500/50 rounded-md placeholder:text-green-300/40 focus:border-green-400 focus:ring-green-400"
                     aria-label="Search notes by title or keyword"
                   />
                 </div>
               </div>
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="bg-black border-green-600"> <SelectValue placeholder="Select category" /> </SelectTrigger>
-                <SelectContent className="bg-black border-green-600 text-green-300"> {categories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)} </SelectContent>
-              </Select>
-              <Select value={selectedTag} onValueChange={setSelectedTag}>
-                <SelectTrigger className="bg-black border-green-600"> <SelectValue placeholder="Select tag" /> </SelectTrigger>
-                <SelectContent className="bg-black border-green-600 text-green-300"> {tags.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)} </SelectContent>
-              </Select>
-              <div className="flex gap-2">
-                <Select value={`${sortBy}-${sortOrder}`} onValueChange={(value) => {
-                  const [newSortBy, newSortOrder] = value.split('-')
-                  setSortBy(newSortBy as any)
-                  setSortOrder(newSortOrder as any)
-                }}>
-                  <SelectTrigger className="bg-black border-green-600 w-full"> <SelectValue placeholder="Sort by" /> </SelectTrigger>
-                  <SelectContent className="bg-black border-green-600 text-green-300">
-                    <SelectItem value="date-desc">Newest</SelectItem>
-                    <SelectItem value="date-asc">Oldest</SelectItem>
-                    <SelectItem value="title-asc">Title (A-Z)</SelectItem>
-                    <SelectItem value="title-desc">Title (Z-A)</SelectItem>
-                  </SelectContent>
-                </Select>
+
+              {/* Dropdown Filters Section */}
+              <div className="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label htmlFor="category-select" className="text-cyan-400 text-sm font-bold mb-2 block">Category</label>
+                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                    <SelectTrigger id="category-select" className="w-full bg-black/80 border-green-500/50 rounded-md focus:border-green-400 focus:ring-green-400"><SelectValue placeholder="Select category" /></SelectTrigger>
+                    <SelectContent className="bg-black border-green-600 text-green-300 rounded-md"><SelectContent>{categories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent></SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label htmlFor="tag-select" className="text-cyan-400 text-sm font-bold mb-2 block">Tag</label>
+                  <Select value={selectedTag} onValueChange={setSelectedTag}>
+                    <SelectTrigger id="tag-select" className="w-full bg-black/80 border-green-500/50 rounded-md focus:border-green-400 focus:ring-green-400"><SelectValue placeholder="Select tag" /></SelectTrigger>
+                    <SelectContent className="bg-black border-green-600 text-green-300 rounded-md"><SelectContent>{tags.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent></SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label htmlFor="sort-select" className="text-cyan-400 text-sm font-bold mb-2 block">Sort By</label>
+                  <Select value={`${sortBy}-${sortOrder}`} onValueChange={(value) => {
+                    const [newSortBy, newSortOrder] = value.split('-')
+                    setSortBy(newSortBy as any)
+                    setSortOrder(newSortOrder as any)
+                  }}>
+                    <SelectTrigger id="sort-select" className="w-full bg-black/80 border-green-500/50 rounded-md focus:border-green-400 focus:ring-green-400"><SelectValue placeholder="Sort by" /></SelectTrigger>
+                    <SelectContent className="bg-black border-green-600 text-green-300 rounded-md">
+                      <SelectItem value="date-desc">Newest</SelectItem>
+                      <SelectItem value="date-asc">Oldest</SelectItem>
+                      <SelectItem value="title-asc">Title (A-Z)</SelectItem>
+                      <SelectItem value="title-desc">Title (Z-A)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
-          </Card>
+          </div>
 
           {/* View Mode Tabs */}
           <div className="relative">
@@ -347,8 +412,14 @@ export function NotesClient({ initialNotes }: { initialNotes: NoteSummary[] }) {
                   </Card>
                 ) : (
                   <>
-                    <TabsContent value={VIEW_MODES.GRID}>{renderGridView()}</TabsContent>
-                    <TabsContent value={VIEW_MODES.LIST}>{renderListView()}</TabsContent>
+                    <TabsContent value={VIEW_MODES.GRID}>
+                      {renderGridView()}
+                      {renderPagination()}
+                    </TabsContent>
+                    <TabsContent value={VIEW_MODES.LIST}>
+                      {renderListView()}
+                      {renderPagination()}
+                    </TabsContent>
                     <TabsContent value={VIEW_MODES.FOLDER}>{renderFolderView()}</TabsContent>
                     <TabsContent value={VIEW_MODES.TIMELINE}>
                       <div className="space-y-4">{renderTimelineView()}</div>
@@ -361,7 +432,7 @@ export function NotesClient({ initialNotes }: { initialNotes: NoteSummary[] }) {
             {/* Results Summary */}
             {filteredNotes.length > 0 && (
               <div className="text-center text-green-300 text-sm">
-                Showing {filteredNotes.length} of {notes.length} notes
+                Showing {currentNotes.length} of {filteredNotes.length} notes
                 {searchQuery && ` for "${searchQuery}"`}
                 {(selectedCategory !== "all" || selectedTag !== "all" || selectedSubfolder !== "all") && " (filtered)"}
               </div>
