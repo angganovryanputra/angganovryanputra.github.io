@@ -1,25 +1,19 @@
 // Static Site Generation Utilities for GitHub Pages
 import { fetchMediumPosts } from "./medium-rss"
-import { fetchNotionNotes } from "./notion-api"
 
 export async function generateStaticData() {
   try {
     // Fetch data at build time for static generation
-    const [mediumPosts, notionNotes] = await Promise.all([
-      fetchMediumPosts("angga.cybersec"),
-      fetchNotionNotes(process.env.NOTION_DATABASE_ID || ""),
-    ])
+    const mediumPosts = await fetchMediumPosts("angganvryn")
 
     return {
       mediumPosts,
-      notionNotes,
       lastUpdated: new Date().toISOString(),
     }
   } catch (error) {
     console.error("Error generating static data:", error)
     return {
       mediumPosts: [],
-      notionNotes: [],
       lastUpdated: new Date().toISOString(),
     }
   }
@@ -27,7 +21,7 @@ export async function generateStaticData() {
 
 // Environment variables validation
 export function validateEnvironment() {
-  const requiredVars = ["NOTION_API_KEY", "NOTION_DATABASE_ID", "RSS2JSON_API_KEY"]
+  const requiredVars = ["RSS2JSON_API_KEY"]
 
   const missing = requiredVars.filter((varName) => !process.env[varName])
 

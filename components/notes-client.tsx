@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react"
 import { Navigation } from "@/components/navigation"
 import { NotesLoading } from "@/components/notes-loading"
-import { type NoteData } from "@/lib/notes" // Updated import
+import { type NoteSummary } from "@/lib/notes"
 import { VIEW_MODES } from "@/lib/constants"
 import {
   Calendar,
@@ -27,17 +27,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import Link from "next/link"
-import type { JSX } from "react/jsx-runtime"
 
 interface FolderStructure {
   [key: string]: {
-    notes: NoteData[]
+    notes: NoteSummary[]
     subfolders: FolderStructure
   }
 }
 
-export function NotesClient({ initialNotes }: { initialNotes: NoteData[] }) {
-  const [notes] = useState<NoteData[]>(initialNotes)
+export function NotesClient({ initialNotes }: { initialNotes: NoteSummary[] }) {
+  const [notes] = useState<NoteSummary[]>(initialNotes)
   const [categories, setCategories] = useState<string[]>([])
   const [tags, setTags] = useState<string[]>([])
   const [subfolders, setSubfolders] = useState<string[]>([])
@@ -65,37 +64,47 @@ export function NotesClient({ initialNotes }: { initialNotes: NoteData[] }) {
   }, [initialNotes]);
 
   const filteredNotes = useMemo(() => {
-    return notes
-      .filter((note) => {
-        if (searchQuery) {
-          const query = searchQuery.toLowerCase();
-          const inTitle = note.title.toLowerCase().includes(query);
-          const inContent = note.content?.toLowerCase().includes(query) || false;
-          const inTags = note.tags.some(tag => tag.toLowerCase().includes(query));
-          const inCategory = note.category.toLowerCase().includes(query);
-          return inTitle || inContent || inTags || inCategory;
-        }
-        const categoryMatch = selectedCategory === "all" || note.category === selectedCategory
-        const tagMatch = selectedTag === "all" || note.tags.includes(selectedTag)
-        const subfolderMatch = selectedSubfolder === "all" || note.slug.startsWith(`${selectedSubfolder}/`)
-        return categoryMatch && tagMatch && subfolderMatch
+    let filtered = notes
+
+    // 1. Apply dropdown filters first
+    filtered = filtered.filter((note: NoteSummary) => {
+      const categoryMatch = selectedCategory === "all" || note.category === selectedCategory
+      const tagMatch = selectedTag === "all" || note.tags.includes(selectedTag)
+      const subfolderMatch =
+        selectedSubfolder === "all" || note.slug.startsWith(`${selectedSubfolder}/`)
+      return categoryMatch && tagMatch && subfolderMatch
+    })
+
+    // 2. Then, apply search query filter on the result
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase()
+      filtered = filtered.filter((note: NoteSummary) => {
+        if (!note) return false
+        const inTitle = note.title.toLowerCase().includes(query)
+        const inTags = note.tags.some((tag: string) => tag.toLowerCase().includes(query))
+        const inCategory = note.category.toLowerCase().includes(query)
+        return inTitle || inTags || inCategory
       })
-      .sort((a, b) => {
-        const aVal = a[sortBy]
-        const bVal = b[sortBy]
-        if (aVal < bVal) return sortOrder === "asc" ? -1 : 1
-        if (aVal > bVal) return sortOrder === "asc" ? 1 : -1
-        return 0
-      })
+    }
+
+    // 3. Finally, sort the results
+    return filtered.sort((a: NoteSummary, b: NoteSummary) => {
+      const aVal = a[sortBy]
+      const bVal = b[sortBy]
+      if (aVal < bVal) return sortOrder === "asc" ? -1 : 1
+      if (aVal > bVal) return sortOrder === "asc" ? 1 : -1
+      return 0
+    })
   }, [notes, selectedCategory, selectedTag, selectedSubfolder, searchQuery, sortBy, sortOrder])
 
   const folderStructure = useMemo(() => {
     const structure: FolderStructure = {}
-    filteredNotes.forEach((note) => {
-      const pathParts = note.slug.split('/')
-      let currentLevel = structure
-      pathParts.forEach((part, index) => {
+    filteredNotes.forEach((note: NoteSummary) => {
+      const pathParts = note.slug.split("/")
+      let currentLevel: FolderStructure = structure
+      pathParts.forEach((part: string, index: number) => {
         if (index === pathParts.length - 1) {
+          // This is the note file itself
           if (!currentLevel["__notes__"]) {
             currentLevel["__notes__"] = { notes: [], subfolders: {} }
           }
@@ -125,7 +134,7 @@ export function NotesClient({ initialNotes }: { initialNotes: NoteData[] }) {
 
   const renderGridView = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {filteredNotes.map((note) => (
+      {filteredNotes.map((note: NoteSummary) => (
         <Card key={note.id} className="bg-black/80 border-green-400/50 hover:border-green-400 transition-all duration-300 transform hover:-translate-y-1">
           <Link href={`/notes/${note.slug}`} passHref>
             <CardHeader>
@@ -143,20 +152,20 @@ export function NotesClient({ initialNotes }: { initialNotes: NoteData[] }) {
                 {note.category}
               </div>
               <div className="flex flex-wrap gap-2">
-                {note.tags.map((tag) => (
+                {note.tags.map((tag: string) => (
                   <Badge key={tag} variant="secondary" className="bg-green-800/50 text-green-300">{tag}</Badge>
                 ))}
               </div>
             </CardContent>
           </Link>
-        </Card>
-      ))}
+          </Card>
+        ))}
     </div>
   )
 
   const renderListView = () => (
     <div className="space-y-4">
-      {filteredNotes.map((note) => (
+      {filteredNotes.map((note: NoteSummary) => (
         <Card key={note.id} className="bg-black/80 border-green-400/50 hover:border-green-400 transition-all duration-300">
           <Link href={`/notes/${note.slug}`} passHref>
             <div className="p-4 flex items-center justify-between">
@@ -176,12 +185,12 @@ export function NotesClient({ initialNotes }: { initialNotes: NoteData[] }) {
   )
 
   const renderFolderTreeView = (structure: FolderStructure, path = "") => {
-    return Object.entries(structure).map(([name, content]) => {
+    return Object.entries(structure).map(([name, content]: [string, { notes: NoteSummary[], subfolders: FolderStructure }]) => {
       const currentPath = path ? `${path}/${name}` : name
       const isExpanded = expandedFolders.has(currentPath)
 
       if (name === "__notes__") {
-        return content.notes.map(note => (
+        return content.notes.map((note: NoteSummary) => (
             <Link key={note.id} href={`/notes/${note.slug}`} className="flex items-center p-2 ml-4 rounded-md hover:bg-green-900/50">
                 <FileText className="w-4 h-4 mr-2 text-green-400" />
                 <span className="text-green-300">{note.title}</span>
@@ -199,7 +208,7 @@ export function NotesClient({ initialNotes }: { initialNotes: NoteData[] }) {
           {isExpanded && (
             <div className="pl-4 border-l-2 border-green-800/50 ml-2">
               {renderFolderTreeView(content.subfolders, currentPath)}
-              {content.notes.map(note => (
+              {content.notes.map((note: NoteSummary) => (
                 <Link key={note.id} href={`/notes/${note.slug}`} className="flex items-center p-2 ml-4 rounded-md hover:bg-green-900/50">
                     <FileText className="w-4 h-4 mr-2 text-green-400" />
                     <span className="text-green-300">{note.title.split('/').pop()}</span>
@@ -219,30 +228,28 @@ export function NotesClient({ initialNotes }: { initialNotes: NoteData[] }) {
   )
 
   const renderTimelineView = () => {
-    const groupedByYear = filteredNotes.reduce((acc, note) => {
-      const year = new Date(note.date).getFullYear()
+    const groupedByYear = filteredNotes.reduce((acc: Record<string, NoteSummary[]>, note: NoteSummary) => {
+      const year = new Date(note.date).getFullYear().toString()
       if (!acc[year]) acc[year] = []
       acc[year].push(note)
       return acc
-    }, {} as Record<string, NoteData[]>)
+    }, {})
 
-    return Object.entries(groupedByYear)
-      .sort(([yearA], [yearB]) => Number(yearB) - Number(yearA))
-      .map(([year, notesInYear]) => (
-        <div key={year}>
-          <h3 className="text-2xl font-bold text-green-400 my-4">{year}</h3>
-          <div className="border-l-2 border-green-500/50 pl-6 relative">
-            {notesInYear.map((note, index) => (
-              <div key={note.id} className="mb-8 relative">
-                <div className="absolute -left-[34px] top-1 w-4 h-4 bg-green-500 rounded-full border-4 border-black"></div>
-                <p className="text-sm text-green-300/70 mb-1">{new Date(note.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</p>
-                <Link href={`/notes/${note.slug}`} className="text-lg font-semibold text-green-400 hover:underline">{note.title}</Link>
-                <p className="text-sm text-green-300 mt-1">Category: {note.category}</p>
-              </div>
-            ))}
-          </div>
+    return Object.entries(groupedByYear).map(([year, notesInYear]: [string, NoteSummary[]]) => (
+      <div key={year}>
+        <h3 className="text-2xl font-bold text-green-400 my-4">{year}</h3>
+        <div className="border-l-2 border-green-500/50 pl-6 relative">
+          {notesInYear.map((note: NoteSummary) => (
+            <div key={note.id} className="mb-8 relative">
+              <div className="absolute -left-[34px] top-1 w-4 h-4 bg-green-500 rounded-full border-4 border-black"></div>
+              <p className="text-sm text-green-300/70 mb-1">{new Date(note.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</p>
+              <Link href={`/notes/${note.slug}`} className="text-lg font-semibold text-green-400 hover:underline">{note.title}</Link>
+              <p className="text-sm text-green-300 mt-1">Category: {note.category}</p>
+            </div>
+          ))}
         </div>
-      ))
+      </div>
+    ))
   }
 
   if (loading) return <NotesLoading />

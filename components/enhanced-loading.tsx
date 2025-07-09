@@ -66,7 +66,7 @@ export function EnhancedLoading({
   useEffect(() => {
     const getSystemInfo = async () => {
       // --- Local System Info ---
-      const platform = navigator.userAgentData?.platform || navigator.platform || 'N/A';
+      const platform = (navigator as any).userAgentData?.platform || navigator.platform || 'N/A';
       let osName = platform;
       if (platform.startsWith('Win')) osName = 'Windows';
       else if (platform.startsWith('Mac')) osName = 'macOS';
@@ -334,7 +334,7 @@ export function EnhancedLoading({
 ⡇⢸⣿⣿⣿⠀⣿⣿⣿⣿⣿⣧⡘⠻⣾⣷⠾⠋⣰⣿⣿⣿⣿⣿⠀⣿⣿⣿⣧⠘
 ⣷⣌⠙⠿⣿⠀⣿⣿⣿⣿⣿⣿⣄⣉⣉⣠⣿⣿⣿⣿⣿⣿⣿⣿⠀⣿⡿⠛⣡⣼
 ⣿⣿⣿⣦⣈⠀⠿⠿⠿⠿⠟⠛⠛⠛⠛⠿⠛⠟⠛⢿⣿⠛⠻⠀⢉⣴⣾⣿⣿
-⣿⣿⣿⣿⣿⡀⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠀⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⡀⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠀⣿⣿⣿⣿⣿⣿
         `}</pre>
       </div>
       <div className="flex items-center space-x-2 mb-4">

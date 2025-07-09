@@ -25,6 +25,8 @@ export interface NoteData {
   [key: string]: any;
 }
 
+export type NoteSummary = Omit<NoteData, 'contentHtml' | 'toc' | 'content'>;
+
 // Custom Rehype plugin to extract Table of Contents after slugs are added
 function extractToc() {
   return (tree: any, file: any) => {
@@ -48,9 +50,9 @@ function extractToc() {
 }
 
 // This function will recursively get all notes from all subdirectories
-function getAllNotesRecursively(dir: string, relativePath: string = ''): Omit<NoteData, 'contentHtml' | 'toc'>[] {
+function getAllNotesRecursively(dir: string, relativePath: string = ''): NoteSummary[] {
   const entries = fs.readdirSync(dir, { withFileTypes: true });
-  let notes: Omit<NoteData, 'contentHtml' | 'toc'>[] = [];
+  let notes: NoteSummary[] = [];
 
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
@@ -67,7 +69,6 @@ function getAllNotesRecursively(dir: string, relativePath: string = ''): Omit<No
       notes.push({
         id,
         slug: id,
-        content: matterResult.content,
         title: matterResult.data.title || 'Untitled Note',
         date: matterResult.data.date || fs.statSync(fullPath).mtime.toISOString(),
         category: matterResult.data.category || category,
@@ -79,7 +80,7 @@ function getAllNotesRecursively(dir: string, relativePath: string = ''): Omit<No
   return notes;
 }
 
-export function getAllNotes(): Omit<NoteData, 'contentHtml' | 'toc'>[] {
+export function getAllNotes(): NoteSummary[] {
   const allNotes = getAllNotesRecursively(notesDirectory);
   // Sort notes by date
   return allNotes.sort((a, b) => {
