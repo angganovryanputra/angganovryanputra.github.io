@@ -2,7 +2,7 @@
 
 import { MatrixRain } from "@/components/matrix-rain"
 import { Navigation } from "@/components/navigation"
-import { EnhancedLoading } from "@/components/enhanced-loading"
+import { LoadingSpinner } from "@/components/loading-spinner"
 import { useState, useEffect } from "react"
 import {
   Shield,
@@ -50,6 +50,20 @@ export default function AboutPage() {
     }, 3000)
     return () => clearInterval(interval)
   }, [])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-green-400 font-mono relative overflow-hidden">
+        <MatrixRain />
+        <div className="relative z-10">
+          <Navigation />
+          <main className="container mx-auto px-4 py-8">
+            <LoadingSpinner message="Loading Profile..." />
+          </main>
+        </div>
+      </div>
+    )
+  }
 
   const roles = [
     {
@@ -134,20 +148,6 @@ export default function AboutPage() {
   ]
 
   const currentRole = roles[activeRole]
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-black text-green-400 font-mono relative overflow-hidden">
-        <MatrixRain />
-        <div className="relative z-10">
-          <Navigation />
-          <main className="container mx-auto px-4 py-8">
-            <EnhancedLoading message="Loading profile information..." variant="pulse" size="lg" />
-          </main>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="min-h-screen bg-black text-green-400 font-mono relative overflow-hidden">

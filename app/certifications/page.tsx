@@ -3,7 +3,7 @@
 import { MatrixRain } from "@/components/matrix-rain"
 import { Navigation } from "@/components/navigation"
 import { LoadingSpinner } from "@/components/loading-spinner"
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react"  
 
 export default function CertificationsPage() {
   const [loading, setLoading] = useState(true)
@@ -14,6 +14,21 @@ export default function CertificationsPage() {
     }, 1300)
     return () => clearTimeout(timer)
   }, [])
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "Active":
+        return "bg-green-500 text-green-950 border-green-400"
+      case "Studying":
+        return "bg-yellow-400 text-yellow-950 border-yellow-300"
+      case "Planned":
+        return "bg-cyan-400 text-cyan-950 border-cyan-300"
+      case "Expired":
+        return "bg-red-500 text-red-950 border-red-400"
+      default:
+        return "bg-gray-500 text-gray-950 border-gray-400"
+    }
+  }
 
   const certifications = [
     {
@@ -32,7 +47,6 @@ export default function CertificationsPage() {
         "Cyber Crime Investigation",
         "Forensic Tools",
       ],
-      logo: "/images/cert-chfi.png",
     },
     {
       name: "CompTIA PenTest+ ce Certification",
@@ -44,7 +58,6 @@ export default function CertificationsPage() {
       description:
         "Comprehensive penetration testing certification covering planning, scoping, vulnerability identification, and reporting of penetration test activities.",
       skills: ["Penetration Testing", "Vulnerability Assessment", "Security Testing", "Risk Analysis", "Reporting"],
-      logo: null,
     },
     {
       name: "CompTIA Security+ ce Certification",
@@ -56,7 +69,6 @@ export default function CertificationsPage() {
       description:
         "Foundation-level cybersecurity certification covering core security concepts, risk management, and security technologies.",
       skills: ["Network Security", "Risk Management", "Cryptography", "Identity Management", "Security Operations"],
-      logo: null,
     },
     {
       name: "Certified Network Security Practitioner",
@@ -74,7 +86,6 @@ export default function CertificationsPage() {
         "Firewall Management",
         "Network Defense",
       ],
-      logo: "/images/cert-cnsp.png",
     },
     {
       name: "Microsoft Certified: Security, Compliance, and Identity Fundamentals",
@@ -86,7 +97,6 @@ export default function CertificationsPage() {
       description:
         "Foundational certification covering Microsoft security, compliance, and identity solutions and services.",
       skills: ["Microsoft Security", "Identity Management", "Compliance", "Azure Security", "Microsoft 365 Security"],
-      logo: "/images/cert-microsoft-appsec.png",
     },
     {
       name: "Certified AppSec Practitioner",
@@ -98,24 +108,8 @@ export default function CertificationsPage() {
       description:
         "Application security certification focusing on secure coding practices, application testing, and vulnerability management.",
       skills: ["Application Security", "Secure Coding", "OWASP", "Code Review", "Security Testing"],
-      logo: "/images/cert-microsoft-appsec.png",
     },
   ]
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Active":
-        return "text-green-400 border-green-400 bg-green-400/10"
-      case "Studying":
-        return "text-yellow-400 border-yellow-400 bg-yellow-400/10"
-      case "Planned":
-        return "text-cyan-400 border-cyan-400 bg-cyan-400/10"
-      case "Expired":
-        return "text-red-400 border-red-400 bg-red-400/10"
-      default:
-        return "text-green-400 border-green-400 bg-green-400/10"
-    }
-  }
 
   if (loading) {
     return (
@@ -123,8 +117,8 @@ export default function CertificationsPage() {
         <MatrixRain />
         <div className="relative z-10">
           <Navigation />
-          <main className="container mx-auto px-4 py-8">
-            <LoadingSpinner message="Searching certification database..." />
+          <main className="p-4 sm:p-6 lg:p-8">
+            <LoadingSpinner message="Loading certifications..." />
           </main>
         </div>
       </div>
@@ -132,33 +126,32 @@ export default function CertificationsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-green-400 font-mono relative overflow-hidden">
+    <div className="bg-black text-green-400 min-h-screen font-mono">
       <MatrixRain />
       <div className="relative z-10">
         <Navigation />
-        <main className="container mx-auto px-4 py-8">
-          <div className="bg-black/90 border border-green-400 p-4 md:p-6 rounded-lg">
-            <div className="text-green-400 text-lg md:text-xl font-bold mb-6">
-              $ find ./certifications -name "*.cert" -type f
-            </div>
-            <div className="text-green-300 mb-6 text-sm md:text-base">
-              Searching certification database from LinkedIn profile...
-            </div>
+        <main className="container mx-auto px-4 py-8 max-w-6xl">
+          <div className="bg-black/90 border border-green-400 p-4 md:p-6 rounded-lg mb-8">
+            <h1 className="text-green-400 text-2xl md:text-3xl font-bold">Certifications & Credentials</h1>
+            <p className="text-green-300/70 text-sm mt-2">A showcase of my professional certifications and qualifications.</p>
+          </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+          <section aria-labelledby="certification-list-title">
+            <h2 id="certification-list-title" className="sr-only">List of Certifications</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {certifications.map((cert, index) => (
-                <div
+                <article
                   key={index}
-                  className="bg-black/80 border border-green-400 p-4 md:p-6 rounded relative hover:border-green-300 transition-colors"
+                  className="bg-black/80 border border-green-400/50 rounded-lg p-4 md:p-5 relative overflow-hidden transform hover:scale-[1.02] hover:border-green-400 transition-all duration-300 flex flex-col"
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-green-400 text-sm md:text-lg font-bold mb-1 pr-2">{cert.name}</h3>
-                      <p className="text-cyan-400 text-xs md:text-sm mb-1">{cert.issuer}</p>
-                      {cert.credentialId && <p className="text-green-300 text-xs">ID: {cert.credentialId}</p>}
+                  <div className="flex-grow">
+                    <div className="mb-4">
+                      <h3 className="text-green-300 font-bold text-base md:text-lg leading-tight">{cert.name}</h3>
+                      <p className="text-cyan-400 text-xs md:text-sm font-medium mt-1">by {cert.issuer}</p>
                     </div>
-                    <div className="text-right flex-shrink-0">
-                      <div className="text-green-300 text-xs md:text-sm mb-1">
+
+                    <div className="flex justify-between items-center mb-4 text-xs">
+                      <div className="text-green-300/80">
                         {cert.issueDate}
                         {cert.expiryDate && ` - ${cert.expiryDate}`}
                       </div>
@@ -193,12 +186,14 @@ export default function CertificationsPage() {
                   </div>
 
                   <div className="absolute left-0 top-0 w-1 h-full bg-green-400"></div>
-                </div>
+                </article>
               ))}
             </div>
+          </section>
 
-            <div className="bg-black/80 border border-green-400 p-4 md:p-6 rounded mt-8">
-              <h2 className="text-green-400 text-lg font-bold mb-4"># Certification Summary</h2>
+          <section aria-labelledby="certification-summary-title" className="mt-8">
+            <div className="bg-black/80 border border-green-400 p-4 md:p-6 rounded">
+              <h2 id="certification-summary-title" className="text-green-400 text-lg font-bold mb-4"># Certification Summary</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div>
                   <div className="text-green-300 text-sm">Total Certifications</div>
@@ -223,7 +218,7 @@ export default function CertificationsPage() {
                 <div>{"> Next Goals: CRTA, OSCP, etc"}</div>
               </div>
             </div>
-          </div>
+          </section>
         </main>
       </div>
     </div>

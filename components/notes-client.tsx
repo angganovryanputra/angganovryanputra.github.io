@@ -194,7 +194,7 @@ export function NotesClient({ initialNotes }: { initialNotes: NoteData[] }) {
           <div onClick={() => toggleFolder(currentPath)} className="flex items-center p-2 rounded-md cursor-pointer hover:bg-green-900/50">
             {isExpanded ? <ChevronDown className="w-4 h-4 mr-2 text-green-400" /> : <ChevronRight className="w-4 h-4 mr-2 text-green-400" />}
             <Folder className="w-4 h-4 mr-2 text-yellow-400" />
-            <span className="text-green-300 font-semibold">{name}</span>
+            <h3 className="text-green-300 font-semibold">{name}</h3>
           </div>
           {isExpanded && (
             <div className="pl-4 border-l-2 border-green-800/50 ml-2">
@@ -253,21 +253,34 @@ export function NotesClient({ initialNotes }: { initialNotes: NoteData[] }) {
       <Navigation />
       <div className="container mx-auto px-4 py-8 pt-24">
         <header className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-green-400 tracking-widest">NOTES ARCHIVE</h1>
-          <p className="text-green-300/80 mt-2">A collection of thoughts, research, and findings.</p>
+          <h1 className="text-green-400 text-5xl font-bold flex items-center">
+            <BookOpen className="w-6 h-6 mr-3" />
+            Cybersecurity Notes & Research
+          </h1>
+          <p className="text-green-300/70 mt-2">$ tree ./notes --all</p>
         </header>
 
         <main>
           {/* Filters and Controls */}
           <Card className="bg-black/80 border border-green-400/50 p-4 mb-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Input
-                type="text"
-                placeholder="Search notes..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-black border-green-600 focus:ring-green-500 focus:border-green-500"
-              />
+              <div>
+                <label htmlFor="search-notes" className="text-cyan-400 text-sm font-bold mb-2 block">
+                  Search Notes
+                </label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-green-300/70" />
+                  <Input
+                    id="search-notes"
+                    type="text"
+                    placeholder="Search by title or keyword..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10"
+                    aria-label="Search notes by title or keyword"
+                  />
+                </div>
+              </div>
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                 <SelectTrigger className="bg-black border-green-600"> <SelectValue placeholder="Select category" /> </SelectTrigger>
                 <SelectContent className="bg-black border-green-600 text-green-300"> {categories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)} </SelectContent>

@@ -1,7 +1,7 @@
 import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
-import { SecurityValidator } from "./security/validation"
+import { SecurityValidator } from "./security-utils"
 
 export interface ObsidianNote {
   id: string

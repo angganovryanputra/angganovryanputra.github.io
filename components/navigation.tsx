@@ -99,6 +99,7 @@ export function Navigation() {
                   <Link
                     key={item.href}
                     href={item.href}
+                    aria-current={isActive ? "page" : undefined}
                     className={cn(
                       "flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200",
                       "hover:scale-105 hover:shadow-md hover:shadow-green-400/20",
@@ -128,16 +129,13 @@ export function Navigation() {
 
               {/* Mobile menu button */}
               <Button
+                aria-label={isOpen ? "Close main menu" : "Open main menu"}
+                aria-expanded={isOpen}
+                aria-controls="mobile-menu"
                 onClick={toggleMenu}
                 variant="ghost"
-                size="sm"
-                className={cn(
-                  "lg:hidden text-green-400 hover:text-green-300 hover:bg-green-400/10",
-                  "transition-all duration-200 hover:scale-110",
-                  isOpen && "bg-green-400/20 text-green-300",
-                )}
-                aria-label={isOpen ? "Close menu" : "Open menu"}
-                aria-expanded={isOpen}
+                size="icon"
+                className="lg:hidden text-green-400 hover:text-green-300 hover:bg-green-400/10"
               >
                 {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </Button>
@@ -146,6 +144,7 @@ export function Navigation() {
 
           {/* Mobile Navigation */}
           <div
+            id="mobile-menu"
             className={cn(
               "lg:hidden overflow-hidden transition-all duration-300 ease-in-out",
               isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
@@ -160,6 +159,7 @@ export function Navigation() {
                     <Link
                       key={item.href}
                       href={item.href}
+                      aria-current={isActive ? "page" : undefined}
                       className={cn(
                         "flex items-center space-x-3 px-4 py-3 rounded-md text-sm font-medium transition-all duration-200",
                         "hover:translate-x-2 hover:shadow-md hover:shadow-green-400/20",

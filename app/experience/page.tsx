@@ -17,6 +17,20 @@ export default function ExperiencePage() {
     return () => clearTimeout(timer)
   }, [])
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-green-400 font-mono relative overflow-hidden">
+        <MatrixRain />
+        <div className="relative z-10">
+          <Navigation />
+          <main className="container mx-auto px-4 py-8">
+            <LoadingSpinner message="Compiling professional timeline..." />
+          </main>
+        </div>
+      </div>
+    )
+  }
+
   const experiences = [
     {
       title: "Security Engineer",
@@ -89,50 +103,33 @@ export default function ExperiencePage() {
     },
   ]
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-black text-green-400 font-mono relative overflow-hidden">
-        <MatrixRain />
-        <div className="relative z-10">
-          <Navigation />
-          <main className="container mx-auto px-4 py-8">
-            <LoadingSpinner />
-          </main>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-black text-green-400 font-mono relative overflow-hidden">
       <MatrixRain />
       <div className="relative z-10">
         <Navigation />
-        <main className="container mx-auto px-4 py-8">
-          <div className="bg-black/90 border border-green-400 p-6 rounded-lg">
-            <div className="text-green-400 text-xl font-bold mb-6">$ ls -la experience/</div>
-            <div className="text-green-300 mb-6">
-              Displaying professional experience timeline from LinkedIn profile...
-            </div>
+        <main className="container mx-auto px-4 py-8 max-w-6xl">
+          <div className="bg-black/90 border border-green-400 p-4 md:p-6 rounded-lg mb-8">
+            <h1 className="text-green-400 text-2xl md:text-3xl font-bold">Professional Experience</h1>
+            <p className="text-green-300/70 text-sm mt-2">A timeline of my career in cybersecurity.</p>
+          </div>
 
-            <div className="space-y-6">
+          <section aria-labelledby="experience-timeline-title">
+            <h2 id="experience-timeline-title" className="sr-only">Experience Timeline</h2>
+            <div className="space-y-8">
               {experiences.map((exp, index) => (
-                <div key={index} className="bg-black/80 border border-green-400 p-6 rounded relative">
-                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-green-400 text-lg font-bold">{exp.title}</h3>
-                        {exp.current && (
-                          <span className="px-2 py-1 bg-green-400 text-black text-xs rounded font-bold animate-pulse">
-                            CURRENT
-                          </span>
-                        )}
-                        {exp.internship && (
-                          <span className="px-2 py-1 bg-cyan-400 text-black text-xs rounded font-bold">INTERNSHIP</span>
-                        )}
-                      </div>
-                      <p className="text-cyan-400 font-medium">{exp.company}</p>
-                      <p className="text-green-300 text-sm">{exp.location}</p>
+                <article
+                  key={index}
+                  className="bg-black/80 border border-green-400/50 p-4 md:p-6 rounded-lg relative overflow-hidden transform hover:scale-[1.01] hover:border-green-400 transition-all duration-300"
+                >
+                  {exp.current && (
+                    <div className="absolute top-4 right-4 bg-green-500 text-green-950 text-xs font-bold px-2 py-1 rounded">Current</div>
+                  )}
+                  <div className="flex flex-col lg:flex-row justify-between lg:items-center mb-3">
+                    <div>
+                      <h3 className="text-green-300 font-bold text-lg md:text-xl">{exp.title}</h3>
+                      <p className="text-cyan-400 font-medium text-sm">{exp.company}</p>
+                      <p className="text-green-300/70 text-xs mt-1">{exp.location}</p>
                     </div>
                     <div className="text-right mt-2 lg:mt-0">
                       <div className="text-green-300 text-sm">{exp.period}</div>
@@ -157,21 +154,23 @@ export default function ExperiencePage() {
                   </div>
 
                   <div className="absolute left-0 top-0 w-1 h-full bg-green-400"></div>
-                </div>
+                </article>
               ))}
             </div>
+          </section>
 
-            <div className="bg-black/80 border border-green-400 p-6 rounded mt-8">
-              <h2 className="text-green-400 text-lg font-bold mb-4"># Career Progression Summary</h2>
+          <section aria-labelledby="career-summary-title" className="mt-8">
+            <div className="bg-black/80 border border-green-400 p-6 rounded">
+              <h2 id="career-summary-title" className="text-green-400 text-lg font-bold mb-4"># Career Progression Summary</h2>
               <div className="text-green-300 space-y-2 text-sm">
-                <div>{"> Total Experience: 3+ years in cybersecurity"}</div>
-                <div>{"> Current Focus: Security Engineering & Architecture"}</div>
-                <div>{"> Leadership Experience: Penetration Testing Team Lead"}</div>
-                <div>{"> Core Expertise: SIEM, Threat Hunting, Vulnerability Assessment"}</div>
-                <div>{"> Career Growth: Technical Support → SOC Analyst → Pentest Leader → Security Engineer"}</div>
+                <div>{'> Total Experience: 3+ years in cybersecurity'}</div>
+                <div>{'> Current Focus: Security Engineering & Architecture'}</div>
+                <div>{'> Leadership Experience: Penetration Testing Team Lead'}</div>
+                <div>{'> Core Expertise: SIEM, Threat Hunting, Vulnerability Assessment'}</div>
+                <div>{'> Career Growth: Technical Support → SOC Analyst → Pentest Leader → Security Engineer'}</div>
               </div>
             </div>
-          </div>
+          </section>
         </main>
       </div>
     </div>

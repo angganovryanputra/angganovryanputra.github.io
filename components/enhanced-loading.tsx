@@ -11,6 +11,14 @@ interface EnhancedLoadingProps {
   size?: "sm" | "md" | "lg"
 }
 
+interface SystemInfo {
+  os: string;
+  cpu: string;
+  memory: string;
+  ip: string;
+  country: string;
+}
+
 export function EnhancedLoading({
   message = "Initializing security protocols...",
   subMessage,
@@ -24,6 +32,13 @@ export function EnhancedLoading({
   const [terminalLines, setTerminalLines] = useState<string[]>([])
   const [currentCommand, setCurrentCommand] = useState("")
   const [showCursor, setShowCursor] = useState(true)
+  const [systemInfo, setSystemInfo] = useState<SystemInfo>({
+    os: 'Detecting OS...',
+    cpu: 'Detecting CPU...',
+    memory: 'Detecting Memory...',
+    ip: 'Resolving IP...',
+    country: 'Locating...',
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -47,6 +62,46 @@ export function EnhancedLoading({
       return () => clearTimeout(timer)
     }
   }, [progress, showProgress])
+
+  useEffect(() => {
+    const getSystemInfo = async () => {
+      // --- Local System Info ---
+      const platform = navigator.userAgentData?.platform || navigator.platform || 'N/A';
+      let osName = platform;
+      if (platform.startsWith('Win')) osName = 'Windows';
+      else if (platform.startsWith('Mac')) osName = 'macOS';
+      else if (platform.toLowerCase().includes('linux')) osName = 'Linux';
+      else if (['iPhone', 'iPad', 'iPod'].includes(platform)) osName = 'iOS';
+
+      const cores = navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency}-core Processor` : 'N/A';
+      const memory = (navigator as any).deviceMemory ? `Approx. ${(navigator as any).deviceMemory}GB available` : 'N/A';
+
+      // --- IP & Geolocation Info ---
+      let ipAddress = 'N/A';
+      let country = 'N/A';
+      try {
+        const response = await fetch('https://ipinfo.io/json');
+        if (!response.ok) throw new Error('Failed to fetch IP info');
+        const data = await response.json();
+        ipAddress = data.ip || 'N/A';
+        country = data.country || 'N/A';
+      } catch (error) {
+        console.error('IP detection failed:', error);
+        ipAddress = 'Detection Failed';
+        country = 'Detection Failed';
+      }
+
+      setSystemInfo({
+        os: `${osName} user-system`,
+        cpu: cores,
+        memory: memory,
+        ip: ipAddress,
+        country: country,
+      });
+    };
+
+    getSystemInfo();
+  }, []);
 
   useEffect(() => {
     if (variant === "terminal") {
@@ -138,18 +193,22 @@ export function EnhancedLoading({
             {/* Boot Header */}
             <div className="text-green-400 mb-4 text-xs md:text-sm">
               <div className="border-b border-green-400/30 pb-2 mb-4">
-                <div className="text-center">╔══════════════════════════════════════════════════════════════╗</div>
-                <div className="text-center">║ SECURITY SYSTEM BOOT ║</div>
-                <div className="text-center">║ Angga Cybersec Portfolio ║</div>
-                <div className="text-center">╚══════════════════════════════════════════════════════════════╝</div>
+                {/* Responsive Boot Header */}
+                <div className="border-2 border-green-400/50 p-1">
+                  <div className="border border-green-400/50 p-2 text-center">
+                    <p className="font-bold tracking-widest">SECURITY SYSTEM BOOT</p>
+                    <p>Angga Novryan Putra Portfolio</p>
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* System Information */}
             <div className="text-green-300 mb-4 text-xs md:text-sm space-y-1">
-              <div>Linux security-system 5.15.0-cybersec #1 SMP</div>
-              <div>CPU: Intel(R) Security Processor @ 3.40GHz</div>
-              <div>Memory: 16384MB available</div>
+              <div>{systemInfo.os}</div>
+              <div>CPU: {systemInfo.cpu}</div>
+              <div>Memory: {systemInfo.memory}</div>
+              <div>Your IP Address: {systemInfo.ip} ({systemInfo.country})</div>
               <div>Security Level: Maximum</div>
               <div className="border-b border-green-400/20 pb-2"></div>
             </div>
@@ -261,17 +320,21 @@ export function EnhancedLoading({
     <div className={`flex flex-col items-center justify-center ${classes.container}`}>
       <div className={`text-green-400 font-mono ${classes.matrix} mb-4`}>
         <pre className="text-center leading-tight text-xs md:text-sm">{`
-    ▄▄▄▄▄▄▄
-   ▄█▀▀▀▀▀█▄
-  ▄█ ▄▄▄▄▄ █▄
- ▄█ █▀▀▀▀▀█ █▄
-▄█  █ ▄▄▄ █  █▄
-█   █ █▀█ █   █
-█   █ ███ █   █
-█▄  █ ▀▀▀ █  ▄█
- █▄ █▄▄▄▄▄█ ▄█
-  █▄ ▀▀▀▀▀ ▄█
-   █▄▄▄▄▄▄▄█
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⢋⣠⣤⣤⣤⣤⣤⡙⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⠟⢁⣴⣿⣿⣿⣿⣿⣿⣿⣿⣦⣈⠻⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⡿⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠈⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⡿⢀⣿⣿⡿⠿⠛⢋⣉⣉⡙⠛⠿⢿⣿⣿⡄⢹⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣧⠘⢿⣤⡄⢰⣿⣿⣿⣿⣿⣿⣶⠀⣤⣽⠃⣸⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⡿⠛⢋⣁⡈⢻⡇⢸⣿⣿⣿⣿⣿⣿⡿⢠⡿⢁⣈⡙⠛⢿⣿⣿⣿⣿⣿
+⣿⣿⣿⡿⢁⡾⠿⠿⠿⠄⠹⠄⠙⠛⠿⠿⠟⠋⠠⠞⠠⠾⠿⠿⠿⡄⢻⣿⣿⣿
+⣿⣿⡿⢁⣾⠀⣶⣶⣿⣿⣶⣾⣶⣶⣶⣶⣶⣿⣿⣷⣾⣷⣶⣶⠀⣷⡀⢻⣿⣿
+⣿⣿⠁⣼⣿⠀⣿⣿⣿⣿⣿⠟⣉⣤⣤⣈⠛⣿⣿⣿⣿⣿⣿⠀⣿⣷⡈⢿⣿
+⣿⠃⣼⣿⣿⠀⣿⣿⣿⣿⣿⡇⣰⡛⢿⡿⠛⣧⠘⣿⣿⣿⣿⣿⠀⣿⣿⣷⠈⣿
+⡇⢸⣿⣿⣿⠀⣿⣿⣿⣿⣿⣧⡘⠻⣾⣷⠾⠋⣰⣿⣿⣿⣿⣿⠀⣿⣿⣿⣧⠘
+⣷⣌⠙⠿⣿⠀⣿⣿⣿⣿⣿⣿⣄⣉⣉⣠⣿⣿⣿⣿⣿⣿⣿⣿⠀⣿⡿⠛⣡⣼
+⣿⣿⣿⣦⣈⠀⠿⠿⠿⠿⠟⠛⠛⠛⠛⠿⠛⠟⠛⢿⣿⠛⠻⠀⢉⣴⣾⣿⣿
+⣿⣿⣿⣿⣿⡀⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠀⣿⣿⣿⣿⣿⣿
         `}</pre>
       </div>
       <div className="flex items-center space-x-2 mb-4">
