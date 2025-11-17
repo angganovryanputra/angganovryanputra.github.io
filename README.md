@@ -49,6 +49,7 @@ A modern, responsive cybersecurity portfolio built with Next.js, featuring a ter
 ## 📁 Project Structure
 
 \`\`\`
+
 cybersec-portfolio/
 ├── app/                          # Next.js app directory
 │   ├── about/                    # About page
@@ -88,6 +89,7 @@ cybersec-portfolio/
 ├── next.config.mjs              # Next.js configuration
 ├── tailwind.config.ts           # Tailwind configuration
 └── package.json                 # Dependencies
+
 \`\`\`
 
 ## 🚀 Getting Started
