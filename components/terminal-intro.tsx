@@ -1,37 +1,38 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 interface TerminalIntroProps {
   onComplete: () => void
 }
 
+const TERMINAL_LINES = [
+  "root@angga:~# whoami",
+  "Angga Novryan Putra F.",
+  "SOC Analyst | Penetration Tester | Security Researcher",
+  "",
+  "root@angga:~# ./start_hacking.sh",
+  "Initializing security protocols...",
+  "Loading threat intelligence database...",
+  "Establishing secure connection...",
+  "System ready for operation.",
+  "",
+  "root@angga:~# ls -la skills/",
+  "-rw-r--r--  web_security.sh",
+  "-rw-r--r--  reverse_engineering.py",
+  "-rw-r--r--  siem_analysis.c",
+  "-rw-r--r--  threat_hunting.rb",
+  "-rw-r--r--  forensics.go",
+  "",
+  'root@angga:~# echo "Welcome to my digital domain"',
+  "Welcome to my digital domain",
+]
+
 export function TerminalIntro({ onComplete }: TerminalIntroProps) {
   const [currentLine, setCurrentLine] = useState(0)
   const [currentChar, setCurrentChar] = useState(0)
   const [showCursor, setShowCursor] = useState(true)
-
-  const lines = [
-    "root@angga:~# whoami",
-    "Angga Novryan Putra F.",
-    "SOC Analyst | Penetration Tester | Security Researcher",
-    "",
-    "root@angga:~# ./start_hacking.sh",
-    "Initializing security protocols...",
-    "Loading threat intelligence database...",
-    "Establishing secure connection...",
-    "System ready for operation.",
-    "",
-    "root@angga:~# ls -la skills/",
-    "-rw-r--r--  web_security.sh",
-    "-rw-r--r--  reverse_engineering.py",
-    "-rw-r--r--  siem_analysis.c",
-    "-rw-r--r--  threat_hunting.rb",
-    "-rw-r--r--  forensics.go",
-    "",
-    'root@angga:~# echo "Welcome to my digital domain"',
-    "Welcome to my digital domain",
-  ]
+  const lines = useMemo(() => TERMINAL_LINES, [])
 
   useEffect(() => {
     const cursorInterval = setInterval(() => {

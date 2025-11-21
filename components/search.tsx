@@ -32,7 +32,7 @@ export function SearchModal({ isOpen, onClose }: SearchProps) {
         setSearchStats({ blogs, notes, total: index.length })
       })
     }
-  }, [isOpen])
+  }, [isOpen, searchService])
 
   useEffect(() => {
     if (!query.trim()) {
@@ -56,7 +56,7 @@ export function SearchModal({ isOpen, onClose }: SearchProps) {
     }, 300)
 
     return () => clearTimeout(searchTimeout)
-  }, [query])
+  }, [query, searchService])
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
@@ -168,7 +168,7 @@ export function SearchModal({ isOpen, onClose }: SearchProps) {
 
           {!loading && query && results.length === 0 && (
             <div className="p-4 text-center text-green-400/70">
-              No results found for "{query}"
+              No results found for &quot;{query}&quot;
               <div className="text-xs mt-1">
                 Try searching for: siem, penetration testing, forensics, or specific tools
               </div>
@@ -250,7 +250,7 @@ export function SearchModal({ isOpen, onClose }: SearchProps) {
               <div className="mt-4 text-xs">
                 <div className="font-bold mb-1">Try searching for:</div>
                 <div className="text-green-300/70">
-                  "siem detection", "lateral movement", "penetration testing", "qradar", "splunk", "forensics"
+                  &quot;siem detection&quot;, &quot;lateral movement&quot;, &quot;penetration testing&quot;, &quot;qradar&quot;, &quot;splunk&quot;, &quot;forensics&quot;
                 </div>
               </div>
             </div>

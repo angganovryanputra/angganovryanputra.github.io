@@ -55,7 +55,7 @@ export default function HomePage() {
     if (showContent) {
       // Staggered animation for stats
       const animateStats = () => {
-        const targets = { experience: 3, projects: 50, certifications: 6 }
+        const targets = { experience: 3, projects: 50, certifications: 7 }
         const current = { experience: 0, projects: 0, certifications: 0 }
         const delays = { experience: 0, projects: 500, certifications: 1000 }
 
@@ -185,7 +185,7 @@ export default function HomePage() {
                   gradient: "from-blue-900/20 to-black/80",
                   delay: "0s",
                   description: "Defensive Security Operations",
-                  skills: ["SOC Analysis", "SIEM Implementation", "Incident Response", "Threat Intelligence"],
+                  skills: ["Threat Hunting", "Digital Forensics", "Incident Response", "Threat Intelligence"],
                 },
                 {
                   title: "Red Team",
@@ -194,7 +194,7 @@ export default function HomePage() {
                   gradient: "from-red-900/20 to-black/80",
                   delay: "0.2s",
                   description: "Offensive Security Testing",
-                  skills: ["Penetration Testing", "Vulnerability Assessment", "Social Engineering", "Red Team Ops"],
+                  skills: ["Penetration Testing", "Vulnerability Assessment", "Red Team Ops", "Secure Code Review"],
                 },
                 {
                   title: "Developer",
@@ -203,7 +203,7 @@ export default function HomePage() {
                   gradient: "from-purple-900/20 to-black/80",
                   delay: "0.4s",
                   description: "Security Tool Development",
-                  skills: ["Python Automation", "Security Scripts", "Custom Tools", "API Integration"],
+                  skills: ["Python Automation", "Custom Tools", "API Integration"],
                 },
                 {
                   title: "Researcher",
@@ -212,7 +212,7 @@ export default function HomePage() {
                   gradient: "from-cyan-900/20 to-black/80",
                   delay: "0.6s",
                   description: "Continuous Learning & Research",
-                  skills: ["Threat Intelligence", "Malware Analysis", "Security Research", "Documentation"],
+                  skills: ["Detection Engineering", "Malware Analysis"],
                 },
               ].map((role, index) => (
                 <div
@@ -250,21 +250,21 @@ export default function HomePage() {
                     title: "Experience",
                     value: `${animatedStats.experience}+ Years`,
                     subtitle: "In Cybersecurity",
-                    detail: "SOC • Pentesting • Engineering",
+                    detail: "Threat Hunting • Pentesting",
                   },
                   {
                     icon: Shield,
                     title: "Security Projects",
                     value: `${animatedStats.projects}+`,
                     subtitle: "Completed",
-                    detail: "Detection Rules • Scripts • Tools",
+                    detail: "VAPT • Detection Rules • Automation Scripts",
                   },
                   {
                     icon: Award,
                     title: "Certifications",
                     value: `${animatedStats.certifications}`,
                     subtitle: "Active",
-                    detail: "CHFI • PenTest+ • Security+",
+                    detail: "CySA+ • CHFI • PenTest+ • Security+",
                   },
                 ].map((stat, index) => (
                   <div key={index} className="text-center group">
@@ -291,7 +291,7 @@ export default function HomePage() {
                 {[
                   { href: "/experience", icon: Briefcase, label: "Experience", detail: "3+ Years" },
                   { href: "/skills", icon: Code, label: "Skills", detail: "Technical" },
-                  { href: "/certifications", icon: Award, label: "Certifications", detail: "6 Active" },
+                  { href: "/certifications", icon: Award, label: "Certifications", detail: "7 Active" },
                   { href: "/blog", icon: BookOpen, label: "Blog", detail: "Articles" },
                 ].map((item, index) => (
                   <a
@@ -313,10 +313,10 @@ export default function HomePage() {
                 <div>
                   <div className="text-green-400 text-base md:text-lg font-bold mb-2">Current Status</div>
                   <div className="text-green-300 text-sm md:text-base">
-                    Security Engineer at PT. Cynnex Integrasi Solusi
+                    Lead SOC Analyst L2 at PT. Cynnex Integrasi Solusi
                   </div>
                   <div className="text-green-400/70 text-xs md:text-sm">
-                    Leading security architecture and threat detection initiatives
+                    Leading security operation and threat detection initiatives.
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">

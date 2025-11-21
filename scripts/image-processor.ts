@@ -1,5 +1,7 @@
 import fs from "fs"
 import path from "path"
+import { createHash } from "crypto"
+import imageSize from "image-size"
 
 interface ImageProcessingOptions {
   sourceDir: string
@@ -9,6 +11,23 @@ interface ImageProcessingOptions {
   maxFileSize: number
 }
 
+export interface ProcessedImage {
+  webPath: string
+  filename: string
+  size: number
+  hash: string
+  width?: number
+  height?: number
+  type?: string
+}
+
+export const formatFileSize = (bytes: number): string => {
+  const sizes = ["Bytes", "KB", "MB", "GB"]
+  if (bytes === 0) return "0 Bytes"
+  const i = Math.floor(Math.log(bytes) / Math.log(1024))
+  return `${Math.round((bytes / Math.pow(1024, i)) * 100) / 100} ${sizes[i]}`
+}
+
 class ImageProcessor {
   private readonly defaultOptions: Partial<ImageProcessingOptions> = {
     allowedExtensions: [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"],
@@ -16,7 +35,7 @@ class ImageProcessor {
   }
 
   async processImages(options: ImageProcessingOptions): Promise<{
-    processed: string[]
+    processed: ProcessedImage[]
     errors: string[]
     summary: {
       totalFiles: number
@@ -26,7 +45,7 @@ class ImageProcessor {
     }
   }> {
     const config = { ...this.defaultOptions, ...options }
-    const processed: string[] = []
+    const processed: ProcessedImage[] = []
     const errors: string[] = []
     let totalSize = 0
 
@@ -46,7 +65,7 @@ class ImageProcessor {
 
           // Check file size
           if (stats.size > config.maxFileSize!) {
-            errors.push(`File too large: ${file.name} (${this.formatFileSize(stats.size)})`)
+            errors.push(`File too large: ${file.name} (${formatFileSize(stats.size)})`)
             continue
           }
 
@@ -55,11 +74,24 @@ class ImageProcessor {
           const targetPath = path.join(noteTargetDir, uniqueFileName)
 
           // Copy file to target directory
-          fs.copyFileSync(file.path, targetPath)
+          const buffer = fs.readFileSync(file.path)
+          fs.writeFileSync(targetPath, buffer)
 
           // Generate web-accessible path
           const webPath = `/images/notes/${config.noteSlug}/${uniqueFileName}`
-          processed.push(webPath)
+
+          const dimensions = this.getImageDimensions(buffer)
+          const hash = createHash("sha1").update(buffer).digest("hex")
+
+          processed.push({
+            webPath,
+            filename: uniqueFileName,
+            size: stats.size,
+            hash,
+            width: dimensions?.width,
+            height: dimensions?.height,
+            type: dimensions?.type,
+          })
           totalSize += stats.size
 
           console.log(`Processed: ${file.name} -> ${webPath}`)
@@ -125,13 +157,6 @@ class ImageProcessor {
     return uniqueName
   }
 
-  private formatFileSize(bytes: number): string {
-    const sizes = ["Bytes", "KB", "MB", "GB"]
-    if (bytes === 0) return "0 Bytes"
-    const i = Math.floor(Math.log(bytes) / Math.log(1024))
-    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i]
-  }
-
   async updateMarkdownImagePaths(markdownPath: string, imageMap: Map<string, string>): Promise<void> {
     try {
       let content = fs.readFileSync(markdownPath, "utf8")
@@ -153,21 +178,43 @@ class ImageProcessor {
     return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
   }
 
-  async generateImageManifest(noteSlug: string, images: string[]): Promise<void> {
+  async generateImageManifest(noteSlug: string, images: ProcessedImage[]): Promise<void> {
     const manifestPath = path.join(process.cwd(), "public", "images", "notes", noteSlug, "manifest.json")
 
     const manifest = {
       noteSlug,
       generatedAt: new Date().toISOString(),
-      images: images.map((imagePath) => ({
-        path: imagePath,
-        filename: path.basename(imagePath),
-        url: imagePath,
+      images: images.map((image) => ({
+        path: image.webPath,
+        filename: image.filename,
+        url: image.webPath,
+        size: image.size,
+        hash: image.hash,
+        width: image.width,
+        height: image.height,
+        type: image.type,
       })),
     }
 
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2), "utf8")
     console.log(`Generated image manifest: ${manifestPath}`)
+  }
+
+  private getImageDimensions(buffer: Buffer) {
+    try {
+      const result = imageSize(buffer)
+      if (!result.width || !result.height) {
+        return undefined
+      }
+      return {
+        width: result.width,
+        height: result.height,
+        type: result.type,
+      }
+    } catch (error) {
+      console.warn("Failed to read image dimensions:", error)
+      return undefined
+    }
   }
 }
 
@@ -194,11 +241,18 @@ export async function processNoteImages(noteSlug: string, sourceDir?: string): P
     console.log(`Total files found: ${result.summary.totalFiles}`)
     console.log(`Successfully processed: ${result.summary.processedFiles}`)
     console.log(`Errors: ${result.summary.errorFiles}`)
-    console.log(`Total size: ${processor["formatFileSize"](result.summary.totalSize)}`)
+    console.log(`Total size: ${formatFileSize(result.summary.totalSize)}`)
 
     if (result.processed.length > 0) {
       console.log("\n--- Processed Images ---")
-      result.processed.forEach((path) => console.log(`✓ ${path}`))
+      result.processed.forEach((image) => {
+        const detail = [image.webPath]
+        if (image.width && image.height) {
+          detail.push(`${image.width}x${image.height}px`)
+        }
+        detail.push(formatFileSize(image.size))
+        console.log(`✓ ${detail.join(" | ")}`)
+      })
 
       // Generate manifest
       await processor.generateImageManifest(noteSlug, result.processed)

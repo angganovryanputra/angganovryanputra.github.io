@@ -4,6 +4,7 @@ author: "Security Professional"
 date: "2024-01-15"
 category: "Fundamentals"
 tags: ["cybersecurity", "fundamentals", "security", "basics"]
+description: "Ikhtisar konsep dasar keamanan siber termasuk CIA Triad serta ancaman umum yang dihadapi organisasi modern."
 ---
 
 # Cybersecurity Fundamentals
@@ -188,6 +189,3 @@ The key to effective cybersecurity lies in:
 - Continuously monitoring and improving security posture
 
 Remember: Security is not a destination but a journey that requires constant attention and improvement.
-\`\`\`
-
-\`\`\`

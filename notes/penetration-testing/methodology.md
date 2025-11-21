@@ -4,6 +4,7 @@ author: "Security Professional"
 date: "2024-01-20"
 category: "Penetration Testing"
 tags: ["pentest", "methodology", "security-testing", "vulnerability"]
+description: "Metodologi pengujian penetrasi berlapis mulai dari perencanaan, enumerasi, eksploitasi hingga pelaporan untuk mengevaluasi keamanan sistem."
 ---
 
 # Penetration Testing Methodology

@@ -349,13 +349,13 @@ export default function AboutPage() {
                     </div>
                     <div className="flex items-center p-3 bg-green-900/20 border border-green-400/50 rounded">
                       <Terminal className="w-5 h-5 text-green-400 mr-3" />
-                      <span className="text-green-300">SIEM Implementation & Management</span>
+                      <span className="text-green-300">Detection Engineering</span>
                     </div>
                   </div>
                   <div className="space-y-3">
                     <div className="flex items-center p-3 bg-red-900/20 border border-red-400/50 rounded">
                       <Target className="w-5 h-5 text-red-400 mr-3" />
-                      <span className="text-green-300">Incident Response & Forensics</span>
+                      <span className="text-green-300">Incident Response</span>
                     </div>
                     <div className="flex items-center p-3 bg-purple-900/20 border border-purple-400/50 rounded">
                       <Code className="w-5 h-5 text-purple-400 mr-3" />
@@ -363,7 +363,7 @@ export default function AboutPage() {
                     </div>
                     <div className="flex items-center p-3 bg-yellow-900/20 border border-yellow-400/50 rounded">
                       <Zap className="w-5 h-5 text-yellow-400 mr-3" />
-                      <span className="text-green-300">Malware Analysis & Reverse Engineering</span>
+                      <span className="text-green-300">Digital Forensics</span>
                     </div>
                   </div>
                 </div>
@@ -379,10 +379,10 @@ export default function AboutPage() {
               </CardHeader>
               <CardContent>
                 <blockquote className="text-green-300 text-lg italic border-l-4 border-cyan-400 pl-6 py-4">
-                  "In cybersecurity, the only constant is change. Every day brings new threats, new challenges, and new
+                  &ldquo;In cybersecurity, the only constant is change. Every day brings new threats, new challenges, and new
                   opportunities to learn. My approach combines defensive vigilance with offensive thinking, always
                   staying one step ahead of adversaries while building robust security architectures that protect what
-                  matters most."
+                  matters most.&rdquo;
                 </blockquote>
                 <div className="text-right mt-4">
                   <span className="text-cyan-400 font-medium">- Angga Novryan Putra F.</span>

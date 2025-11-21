@@ -1,7 +1,10 @@
 // Browser-compatible path utilities shim
-export default {
-  join: (...paths: string[]): string => {
-    return paths.filter(Boolean).join("/").replace(/\/+/g, "/")
+const pathShim = {
+  join: (...segments: string[]): string => {
+    return segments
+      .filter(Boolean)
+      .join("/")
+      .replace(/\/+/g, "/")
   },
 
   basename: (path: string, ext?: string): string => {
@@ -24,3 +27,5 @@ export default {
     return dotIndex > 0 ? base.slice(dotIndex) : ""
   },
 }
+
+export default pathShim

@@ -1,5 +1,5 @@
 // Browser-compatible filesystem shim
-export default {
+const fsShim = {
   existsSync: (path: string): boolean => {
     // In browser environment, we'll simulate file existence
     return false
@@ -34,3 +34,5 @@ export default {
     }
   },
 }
+
+export default fsShim

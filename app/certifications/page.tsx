@@ -32,6 +32,24 @@ export default function CertificationsPage() {
 
   const certifications = [
     {
+      name: "CompTIA CySA+ ce Certification",
+      issuer: "CompTIA",
+      issueDate: "Aug 2025",
+      expiryDate: "Aug 2028",
+      credentialId: "-",
+      status: "Active",
+      description:
+        "Intermediate-to-advanced cybersecurity analyst certification designed to validate hands-on skills in threat detection, incident response, vulnerability management, security monitoring, threat intelligence analysis, and defensive operations within enterprise environments.",
+          skills: [
+            "Threat Detection",
+            "Incident Response",
+            "Vulnerability Management",
+            "Security Monitoring",
+            "Threat Intelligence",
+            "Defensive Operations",
+        ],
+    },
+    {
       name: "Certified Hacking Forensic Investigator (CHFI)",
       issuer: "EC-Council",
       issueDate: "Jun 2025",
@@ -207,7 +225,7 @@ export default function CertificationsPage() {
                 </div>
                 <div>
                   <div className="text-green-300 text-sm">Latest Achievement</div>
-                  <div className="text-green-400 text-sm font-bold">CHFI (2025)</div>
+                  <div className="text-green-400 text-sm font-bold">CySA+ (2025)</div>
                 </div>
               </div>
 
@@ -215,7 +233,7 @@ export default function CertificationsPage() {
                 <div>{"> Focus Areas: Digital Forensics, Penetration Testing, Threat Hunting"}</div>
                 <div>{"> Continuous Education: Regular certification renewals and updates"}</div>
                 <div>{"> Industry Recognition: EC-Council, CompTIA, Microsoft, SecOps Group"}</div>
-                <div>{"> Next Goals: CRTA, OSCP, etc"}</div>
+                <div>{"> Next Goals: CRTA, etc"}</div>
               </div>
             </div>
           </section>

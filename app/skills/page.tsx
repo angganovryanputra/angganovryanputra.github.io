@@ -19,8 +19,8 @@ export default function SkillsPage() {
     {
       category: "Security Operations",
       skills: [
-        { name: "SIEM Management", level: 90, tools: ["QRadar", "LogRhythm", "Wazuh"] },
-        { name: "Threat Hunting", level: 85, tools: ["MITRE ATT&CK", "Sigma Rules", "YARA"] },
+        { name: "Detection Engineering", level: 90, tools: ["QRadar", "LogRhythm", "Wazuh"] },
+        { name: "Threat Hunting", level: 90, tools: ["MITRE ATT&CK", "Sigma Rules", "YARA"] },
         { name: "Incident Response", level: 88, tools: ["DFIR", "Volatility", "Autopsy"] },
         { name: "Log Analysis", level: 92, tools: ["ELK Stack", "Graylog", "Fluentd"] },
       ],
@@ -29,9 +29,9 @@ export default function SkillsPage() {
       category: "Penetration Testing",
       skills: [
         { name: "Web Application Testing", level: 85, tools: ["Burp Suite", "OWASP ZAP", "Nuclei"] },
-        { name: "Network Penetration", level: 80, tools: ["Nmap", "Metasploit", "C2 Framework"] },
+        { name: "Network Penetration Testing", level: 80, tools: ["Nmap", "Metasploit", "C2 Framework"] },
         { name: "Vulnerability Assessment", level: 90, tools: ["Acunetix", "Nessus", "NetSparker"] },
-        { name: "Social Engineering", level: 70, tools: ["SET", "Gophish", "BeEF"] },
+        { name: "Mobile Penetration Testing", level: 70, tools: ["OWASP Mobile Security Testing", "OWASP MAST", "OWASP MSTG"] },
       ],
     },
     {
@@ -39,17 +39,16 @@ export default function SkillsPage() {
       skills: [
         { name: "Python", level: 88, tools: ["Scapy", "Requests", "Pandas"] },
         { name: "PowerShell", level: 82, tools: ["Empire", "PowerSploit", "BloodHound"] },
-        { name: "Bash/Shell", level: 85, tools: ["Linux", "Automation", "Scripting"] },
-        { name: "SQL", level: 78, tools: ["MySQL", "PostgreSQL", "SQLite"] },
+        { name: "Bash/Shell", level: 85, tools: ["Linux", "Automation", "Scripting"] }, 
       ],
     },
     {
       category: "Forensics & Analysis",
       skills: [
         { name: "Malware Analysis", level: 80, tools: ["IDA Pro", "Ghidra", "x64dbg"] },
-        { name: "Memory Forensics", level: 75, tools: ["Volatility", "Rekall", "WinDbg"] },
+        { name: "Memory Forensics", level: 75, tools: ["Volatility", "MemProcFS"] },
         { name: "Network Forensics", level: 83, tools: ["Wireshark", "NetworkMiner", "Tcpdump"] },
-        { name: "Reverse Engineering", level: 72, tools: ["Radare2", "Binary Ninja", "OllyDbg"] },
+        { name: "Endpoint Forensics", level: 85, tools: ["EZTools", "KAPE", "FTK Imager"] },
       ],
     },
   ]
@@ -75,8 +74,8 @@ export default function SkillsPage() {
         <Navigation />
         <main className="container mx-auto px-4 py-8 max-w-6xl">
           <div className="bg-black/90 border border-green-400 p-4 md:p-6 rounded-lg mb-8">
-            <h1 className="text-green-400 text-2xl md:text-3xl font-bold">Skills & Proficiencies</h1>
-            <p className="text-green-300/70 text-sm mt-2">$ grep -r skills --include="*.sh" --include="*.py"</p>
+            <h1 className="text-green-400 text-2xl md:text-3xl font-bold">Skills &amp; Proficiencies</h1>
+            <p className="text-green-300/70 text-sm mt-2">$ grep -r skills --include=&quot;*.sh&quot; --include=&quot;*.py&quot;</p>
           </div>
 
           <div className="space-y-8">

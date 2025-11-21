@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+  <loc>https://angganovryanputra.github.io/</loc>
+  <changefreq>weekly</changefreq>
+  <priority>1.0</priority>
+</url>
+<url>
+  <loc>https://angganovryanputra.github.io/notes</loc>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+<url>
+  <loc>https://angganovryanputra.github.io/notes/malware-analysis/static-analysis</loc>
+  <lastmod>2024-01-30T00:00:00.000Z</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://angganovryanputra.github.io/notes/incident-response/playbook</loc>
+  <lastmod>2024-01-25T00:00:00.000Z</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://angganovryanputra.github.io/notes/penetration-testing/methodology</loc>
+  <lastmod>2024-01-20T00:00:00.000Z</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://angganovryanputra.github.io/notes/cybersecurity-fundamentals</loc>
+  <lastmod>2024-01-15T00:00:00.000Z</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://angganovryanputra.github.io/notes/snippet-reference</loc>
+  <lastmod>2024-01-10T00:00:00.000Z</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://angganovryanputra.github.io/notes/MARKDOWN_IMAGE_USAGE</loc>
+  <lastmod>2024-01-01T00:00:00.000Z</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+</urlset>

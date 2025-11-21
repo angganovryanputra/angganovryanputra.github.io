@@ -5,6 +5,36 @@ import { MatrixRain } from "@/components/matrix-rain"
 import { Navigation } from "@/components/navigation"
 import { LoadingSpinner } from "@/components/loading-spinner"
 
+const calculateDuration = (startDate: string, endDate?: string) => {
+  const start = new Date(startDate)
+  const end = endDate ? new Date(endDate) : new Date()
+
+  let totalMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth())
+
+  if (end.getDate() < start.getDate()) {
+    totalMonths -= 1
+  }
+
+  const years = Math.floor(totalMonths / 12)
+  const months = totalMonths % 12
+
+  const parts: string[] = []
+
+  if (years > 0) {
+    parts.push(`${years} year${years > 1 ? "s" : ""}`)
+  }
+
+  if (months > 0) {
+    parts.push(`${months} month${months > 1 ? "s" : ""}`)
+  }
+
+  if (parts.length === 0) {
+    parts.push("Less than a month")
+  }
+
+  return parts.join(" ")
+}
+
 export default function ExperiencePage() {
   const [loading, setLoading] = useState(true)
 
@@ -33,21 +63,19 @@ export default function ExperiencePage() {
 
   const experiences = [
     {
-      title: "Security Engineer",
+      title: "Lead SOC Analyst L2",
       company: "PT. Cynnex Integrasi Solusi (Cynnex)",
       period: "Feb 2025 - Present",
-      duration: "6 months",
+      duration: calculateDuration("2025-02-01"),
       location: "Jakarta, Indonesia",
       description:
         "Leading security engineering initiatives and implementing comprehensive security solutions. Responsible for security architecture design, threat modeling, and security controls implementation across enterprise infrastructure.",
       technologies: [
         "Analytical Skills",
-        "SIEM",
-        "Security Architecture",
-        "Threat Modeling",
-        "Risk Assessment",
-        "Security Controls",
-        "Compliance",
+        "Digital Forensics",
+        "Detection Engineering",
+        "Threat Hunting",
+        "Log Analysis",
         "Incident Response",
         "Vulnerability Management",
       ],
@@ -163,11 +191,11 @@ export default function ExperiencePage() {
             <div className="bg-black/80 border border-green-400 p-6 rounded">
               <h2 id="career-summary-title" className="text-green-400 text-lg font-bold mb-4"># Career Progression Summary</h2>
               <div className="text-green-300 space-y-2 text-sm">
-                <div>{'> Total Experience: 3+ years in cybersecurity'}</div>
-                <div>{'> Current Focus: Security Engineering & Architecture'}</div>
-                <div>{'> Leadership Experience: Penetration Testing Team Lead'}</div>
-                <div>{'> Core Expertise: SIEM, Threat Hunting, Vulnerability Assessment'}</div>
-                <div>{'> Career Growth: Technical Support → SOC Analyst → Pentest Leader → Security Engineer'}</div>
+                <div>{'> Total Experience: 3+ years in cybersecurity field'}</div>
+                <div>{'> Current Focus: Detection Engineering & Reverse Engineering'}</div>
+                <div>{'> Leadership Experience: Penetration Testing Team Lead & SOC L2 Team Lead'}</div>
+                <div>{'> Core Expertise: Detection Engineering, Threat Hunting, Log Analysis'}</div>
+                <div>{'> Career Growth: Technical Support → SOC Analyst → Pentest Leader → Lead SOC Analyst L2'}</div>
               </div>
             </div>
           </section>

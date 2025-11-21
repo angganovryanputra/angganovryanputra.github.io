@@ -4,6 +4,7 @@ author: "CSIRT Team"
 date: "2024-01-25"
 category: "Incident Response"
 tags: ["incident-response", "playbook", "containment", "forensics"]
+description: "Panduan end-to-end bagi tim CSIRT untuk menyiapkan, mendeteksi, menanggapi, dan memulihkan insiden keamanan dengan prosedur jelas."
 ---
 
 # Incident Response Playbook

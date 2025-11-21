@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import { JetBrains_Mono } from "next/font/google"
+import { siteConfig } from "@/lib/site-config"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -13,38 +14,37 @@ const jetbrains = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  // TODO: Ganti dengan URL domain production Anda
-  metadataBase: new URL("https://angganovryanputra.github.io"),
-  title: "Angga Novryan Putra F. - Cybersecurity Professional",
-  description:
-    "SOC Analyst | Penetration Tester | Security Researcher with 3+ years of experience in cybersecurity operations, threat hunting, and penetration testing.",
-  keywords:
-    "cybersecurity, SOC analyst, penetration testing, security researcher, threat hunting, SIEM, incident response",
-  authors: [{ name: "Angga Novryan Putra F." }],
-  generator: 'mxz4rt-sec',
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.shortName}`,
+  },
+  description: siteConfig.description,
+  keywords: siteConfig.description
+    .split(/[.,]/)
+    .map((keyword) => keyword.trim())
+    .filter(Boolean),
+  authors: [{ name: siteConfig.author.name }],
+  creator: siteConfig.author.name,
+  publisher: siteConfig.author.name,
+  generator: "mxz4rt-sec",
   openGraph: {
-    title: "Angga Novryan Putra F. - Cybersecurity Professional",
-    description:
-      "Explore the portfolio of Angga Novryan Putra F., a dedicated cybersecurity professional specializing in threat detection, penetration testing, and security research.",
-    images: [
-      {
-        url: "/profile.png", // Pastikan file ini ada di folder /public
-        width: 1200,
-        height: 630,
-        alt: "Angga Novryan Putra F. Cybersecurity Portfolio",
-      },
-    ],
+    title: siteConfig.name,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    images: [siteConfig.defaultImage],
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Angga Novryan Putra F. - Cybersecurity Professional",
-    description:
-      "Cybersecurity portfolio of Angga Novryan Putra F., focusing on SOC, pentesting, and research. #CyberSecurity #InfoSec",
-    images: ["/profile.png"], // Pastikan file ini ada di folder /public
-    // TODO: Ganti dengan username Twitter Anda (opsional)
-    // creator: "@your_twitter_handle", 
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: [siteConfig.defaultImage.url],
+  },
+  alternates: {
+    canonical: siteConfig.url,
   },
   icons: {
     icon: [
@@ -52,9 +52,7 @@ export const metadata: Metadata = {
       { url: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
       { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
     ],
-    apple: [
-      { url: "/apple-touch-icon.png", type: "image/png" },
-    ],
+    apple: [{ url: "/apple-touch-icon.png", type: "image/png" }],
     other: [
       { rel: "android-chrome-192x192", url: "/android-chrome-192x192.png" },
       { rel: "android-chrome-512x512", url: "/android-chrome-512x512.png" },
@@ -73,7 +71,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang={siteConfig.language}>
       <body className={`${inter.className} ${jetbrains.className}`}>{children}</body>
     </html>
   )

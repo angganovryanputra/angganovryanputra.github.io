@@ -1,10 +1,23 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { MarkdownRenderer } from "@/components/markdown-renderer"
 import type { NoteData } from "@/lib/notes"
-import { ArrowLeft, Calendar, User, Tag, Clock, BookOpen, Hash, ListTree, ArrowUp, ChevronRight, ChevronDown } from "lucide-react"
+import {
+  ArrowLeft,
+  Calendar,
+  User,
+  Tag,
+  Clock,
+  BookOpen,
+  Hash,
+  ListTree,
+  ArrowUp,
+  ChevronRight,
+  ChevronDown,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 
@@ -216,6 +229,74 @@ export function NoteViewerClient({ note }: NoteViewerClientProps) {
                 <MarkdownRenderer content={note.content} />
               </div>
             </article>
+
+            {note.relatedNotes && note.relatedNotes.length > 0 && (
+              <section className="mt-12 border border-green-400/30 bg-black/80 rounded-lg p-6 md:p-8 shadow-[0_0_15px_rgba(52,211,153,0.15)]">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                  <div>
+                    <h2 className="text-2xl font-semibold text-green-300 flex items-center gap-3">
+                      <BookOpen className="h-5 w-5" />
+                      Related Notes
+                    </h2>
+                    <p className="text-green-300/70 text-sm mt-1">
+                      Rekomendasi berdasarkan kategori dan tag yang serupa.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  {note.relatedNotes.map((related) => {
+                    const relatedDate = related.date ? new Date(related.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : ""
+                    const relatedTags = Array.isArray(related.tags) ? related.tags.slice(0, 4) : []
+                    return (
+                      <Link
+                        key={related.slug}
+                        href={`/notes/${related.slug}`}
+                        className="group flex flex-col justify-between rounded-lg border border-green-400/20 bg-black/60 p-5 transition hover:border-green-400/60 hover:bg-green-400/10"
+                      >
+                        <div>
+                          <div className="flex items-start justify-between gap-3">
+                            <h3 className="text-lg font-semibold text-green-200 group-hover:text-green-100">
+                              {related.title}
+                            </h3>
+                            <ChevronRight className="h-4 w-4 text-green-400/70 group-hover:text-green-200" />
+                          </div>
+                          <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-green-300/70">
+                            {relatedDate && (
+                              <span className="flex items-center gap-1">
+                                <Calendar className="h-3 w-3" />
+                                {relatedDate}
+                              </span>
+                            )}
+                            {related.category && (
+                              <span className="flex items-center gap-1">
+                                <BookOpen className="h-3 w-3" />
+                                {related.category}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {relatedTags.length > 0 && (
+                          <div className="mt-4 flex flex-wrap gap-2">
+                            {relatedTags.map((tag) => (
+                              <Badge
+                                key={`${related.slug}-${tag}`}
+                                variant="outline"
+                                className="border-green-400/40 bg-green-400/10 text-green-200"
+                              >
+                                <Tag className="mr-1 h-3 w-3" />
+                                {tag}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+                      </Link>
+                    )
+                  })}
+                </div>
+              </section>
+            )}
           </div>
 
           {/* Sidebar (Desktop-only) */}

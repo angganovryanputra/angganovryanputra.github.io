@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+  <title>Angga Novryan Putra F. - Cybersecurity Professional</title>
+  <link>https://angganovryanputra.github.io</link>
+  <description>SOC Analyst | Penetration Tester | Security Researcher with 3+ years of experience in cybersecurity operations, threat hunting, and penetration testing.</description>
+  <language>en</language>
+  <lastBuildDate>Tue, 30 Jan 2024 00:00:00 GMT</lastBuildDate>
+  <item>
+    <title><![CDATA[Static Malware Analysis Techniques]]></title>
+    <link>https://angganovryanputra.github.io/notes/malware-analysis/static-analysis</link>
+    <guid>https://angganovryanputra.github.io/notes/malware-analysis/static-analysis</guid>
+    <pubDate>Tue, 30 Jan 2024 00:00:00 GMT</pubDate>
+    <category>malware</category>
+    <category>static-analysis</category>
+    <category>reverse-engineering</category>
+    <category>security</category>
+    <description><![CDATA[Static Malware Analysis Techniques Introduction Static malware analysis involves examining malicious software without executing it. This approach allows analysts to understand the malware's structure, functionality, and potential impact while maintaining a safe analysis environment. Preparation and Safety Analysis Envi]]></description>
+  </item>
+  <item>
+    <title><![CDATA[Incident Response Playbook]]></title>
+    <link>https://angganovryanputra.github.io/notes/incident-response/playbook</link>
+    <guid>https://angganovryanputra.github.io/notes/incident-response/playbook</guid>
+    <pubDate>Thu, 25 Jan 2024 00:00:00 GMT</pubDate>
+    <category>incident-response</category>
+    <category>playbook</category>
+    <category>containment</category>
+    <category>forensics</category>
+    <description><![CDATA[Incident Response Playbook Preparation Phase Team Structure and Roles Incident Commander Responsibilities : Overall response coordination and decision making Authority : Resource allocation and external communication approval Skills Required : Leadership, communication, technical understanding Contact Information : 24/]]></description>
+  </item>
+  <item>
+    <title><![CDATA[Penetration Testing Methodology]]></title>
+    <link>https://angganovryanputra.github.io/notes/penetration-testing/methodology</link>
+    <guid>https://angganovryanputra.github.io/notes/penetration-testing/methodology</guid>
+    <pubDate>Sat, 20 Jan 2024 00:00:00 GMT</pubDate>
+    <category>pentest</category>
+    <category>methodology</category>
+    <category>security-testing</category>
+    <category>vulnerability</category>
+    <description><![CDATA[Penetration Testing Methodology Overview Penetration testing is a systematic approach to evaluating the security of an IT infrastructure by safely attempting to exploit vulnerabilities. This methodology follows industry standards and best practices. Testing Phases 1. Planning and Reconnaissance Scope Definition Target ]]></description>
+  </item>
+  <item>
+    <title><![CDATA[Cybersecurity Fundamentals]]></title>
+    <link>https://angganovryanputra.github.io/notes/cybersecurity-fundamentals</link>
+    <guid>https://angganovryanputra.github.io/notes/cybersecurity-fundamentals</guid>
+    <pubDate>Mon, 15 Jan 2024 00:00:00 GMT</pubDate>
+    <category>cybersecurity</category>
+    <category>fundamentals</category>
+    <category>security</category>
+    <category>basics</category>
+    <description><![CDATA[Cybersecurity Fundamentals Introduction Cybersecurity is the practice of protecting systems, networks, and programs from digital attacks. These cyberattacks are usually aimed at accessing, changing, or destroying sensitive information; extorting money from users; or interrupting normal business processes. Implementing ]]></description>
+  </item>
+  <item>
+    <title><![CDATA[Markdown Snippet Reference]]></title>
+    <link>https://angganovryanputra.github.io/notes/snippet-reference</link>
+    <guid>https://angganovryanputra.github.io/notes/snippet-reference</guid>
+    <pubDate>Wed, 10 Jan 2024 00:00:00 GMT</pubDate>
+    <category>markdown</category>
+    <category>snippets</category>
+    <category>renderer</category>
+    <description><![CDATA[Contoh snippet markdown yang didukung oleh renderer statis.]]></description>
+  </item>
+  <item>
+    <title><![CDATA[Markdown Image Usage Guide]]></title>
+    <link>https://angganovryanputra.github.io/notes/MARKDOWN_IMAGE_USAGE</link>
+    <guid>https://angganovryanputra.github.io/notes/MARKDOWN_IMAGE_USAGE</guid>
+    <pubDate>Mon, 01 Jan 2024 00:00:00 GMT</pubDate>
+    <category>markdown</category>
+    <category>images</category>
+    <category>guide</category>
+    <description><![CDATA[Panduan resmi menambahkan gambar ke catatan beserta struktur direktori dan pipeline pemrosesan.]]></description>
+  </item>
+</channel>
+</rss>

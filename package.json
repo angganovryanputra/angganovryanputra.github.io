@@ -3,10 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "node scripts/build-search-index.mjs && next build",
+    "build": "node scripts/build-search-index.mjs && pnpm run generate:sitemap && pnpm run generate:rss && next build",
     "dev": "next dev",
-    "export": "next build && next export",
+    "export": "pnpm run build && next export",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "process-images": "tsx scripts/image-processor.ts",
+    "generate:sitemap": "tsx scripts/generate-sitemap.ts",
+    "generate:rss": "tsx scripts/generate-feed.ts",
+    "validate:content": "tsx scripts/validate-content.ts",
     "start": "next start"
   },
   "dependencies": {
@@ -45,6 +50,7 @@
     "fs": "latest",
     "gray-matter": "latest",
     "highlight.js": "latest",
+    "image-size": "^1.1.1",
     "input-otp": "latest",
     "isomorphic-dompurify": "latest",
     "lucide-react": "^0.454.0",
@@ -63,7 +69,6 @@
     "rehype-slug": "latest",
     "remark": "^15.0.1",
     "remark-breaks": "latest",
-    "remark-gfm": "latest",
     "remark-html": "^16.0.1",
     "remark-gfm": "^4.0.0",
     "remark-parse": "^11.0.0",
@@ -86,6 +91,7 @@
     "gh-pages": "^6.1.0",
     "postcss": "^8.5",
     "tailwindcss": "^3.3.0",
+    "tsx": "^4.7.0",
     "typescript": "^5"
   }
 }

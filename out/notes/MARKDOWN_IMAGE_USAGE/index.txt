@@ -1,0 +1,106 @@
+3:I[2110,[],""]
+5:I[4718,[],""]
+6:I[5433,["204","static/chunks/204-9581e354282e672e.js","160","static/chunks/app/not-found-a28516aa7096d8f5.js"],"default"]
+4:["slug","MARKDOWN_IMAGE_USAGE","c"]
+0:["m2RRtcV21L_7j67IsqxEG",[[["",{"children":["notes",{"children":[["slug","MARKDOWN_IMAGE_USAGE","c"],{"children":["__PAGE__?{\"slug\":[\"MARKDOWN_IMAGE_USAGE\"]}",{}]}]}]},"$undefined","$undefined",true],["",{"children":["notes",{"children":[["slug","MARKDOWN_IMAGE_USAGE","c"],{"children":["__PAGE__",{},[["$L1","$L2",[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/5eacd01f773eed7f.css","precedence":"next","crossOrigin":"$undefined"}]]],null],null]},[null,["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children","notes","children","$4","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]],null]},[null,["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children","notes","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]],[["$","div",null,{"className":"flex justify-center items-center min-h-screen","children":["$","svg",null,{"xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-loader-circle h-16 w-16 animate-spin text-green-400","children":[["$","path","13zald",{"d":"M21 12a9 9 0 1 1-6.219-8.56"}],"$undefined"]}]}],[],[]]]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/3906f3e94a1d4a6a.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/8c19550d91a6635b.css","precedence":"next","crossOrigin":"$undefined"}]],["$","html",null,{"lang":"en","children":["$","body",null,{"className":"__className_f367f3 __className_898c26","children":["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":["$","$L6",null,{}],"notFoundStyles":[]}]}]}]],null],null],["$L7",null]]]]
+8:I[6966,["204","static/chunks/204-9581e354282e672e.js","808","static/chunks/808-187f6909b4a5b2a4.js","860","static/chunks/860-495420967eec7bc0.js","462","static/chunks/462-4c9616718488d804.js","969","static/chunks/app/notes/%5B...slug%5D/page-88c519ee2aaca903.js"],"MatrixRain"]
+9:I[1462,["204","static/chunks/204-9581e354282e672e.js","808","static/chunks/808-187f6909b4a5b2a4.js","860","static/chunks/860-495420967eec7bc0.js","462","static/chunks/462-4c9616718488d804.js","969","static/chunks/app/notes/%5B...slug%5D/page-88c519ee2aaca903.js"],"Navigation"]
+a:I[8052,["204","static/chunks/204-9581e354282e672e.js","808","static/chunks/808-187f6909b4a5b2a4.js","860","static/chunks/860-495420967eec7bc0.js","462","static/chunks/462-4c9616718488d804.js","969","static/chunks/app/notes/%5B...slug%5D/page-88c519ee2aaca903.js"],"NoteViewerClient"]
+b:Tf5b,
+# Markdown Image Usage Guide
+
+Panduan ini menjelaskan cara menambahkan gambar ke catatan Markdown agar dirender dengan benar di situs.
+
+## Prosedur Membuat Catatan Bergambar
+
+1. **Buat file markdown baru di `notes/`**
+   - Nama file menentukan slug otomatis (contoh: `notes/incident-response/forensics.md` → slug `incident-response/forensics`).
+   - Sertakan frontmatter minimal berikut:
+     ```markdown
+     ---
+     title: "Incident Response Forensics"
+     date: "2025-11-17"
+     category: "incident-response"
+     tags: ["forensics", "playbook"]
+     ---
+     ```
+2. **Siapkan folder gambar di `public/images/notes/<slug>/`**
+   - Gunakan nama folder yang sama dengan slug catatan. Contoh slug `incident-response/forensics` → folder `public/images/notes/incident-response/forensics/`.
+   - Salin semua file gambar (PNG, JPG, WEBP, dsb.) ke folder tersebut.
+3. **Sematkan gambar di konten markdown**
+   - Gunakan jalur absolut ke folder publik:
+     ```markdown
+     ![Directory Structure](https://placehold.co/800x460/052e16/34d399.png?text=Directory+Structure)
+     ```
+   - Jika terbiasa dengan Obsidian, Anda boleh menulis `![[https://placehold.co/800x460/052e16/34d399.png?text=Directory+Structure|Directory Structure]]`; renderer akan mengonversi secara otomatis.
+4. **Opsional: jalankan skrip pemrosesan gambar**
+   - Jika gambar masih berada di lokasi lain (mis. hasil ekspor), jalankan `pnpm process-images -- --note guides/markdown-image-usage --source <folder-asal>` untuk menyalin dan memberi nama sesuai standar.
+5. **Bangun dan ekspor situs statis**
+   - `pnpm build && pnpm export` akan membaca ulang seluruh catatan dan menghasilkan output di folder `out/`.
+   - Deploy isi `out/` ke GitHub Pages (mis. `gh-pages -d out`). Catatan baru beserta gambarnya otomatis muncul setelah deploy.
+
+## 1. Struktur Direktori
+
+```
+notes/
+  your-note.md
+public/
+  images/
+    notes/
+      your-note/
+        diagram.png
+```
+
+- Simpan gambar di `public/images/notes/<slug-catatan>/`.
+- Gunakan nama folder yang sama dengan slug catatan untuk menjaga keteraturan.
+
+## 2. Sintaks Markdown Standar
+
+```markdown
+![Diagram Arsitektur](https://placehold.co/800x460/052e16/34d399.png?text=Diagram+Arsitektur)
+```
+
+- Gunakan jalur absolut yang diawali `/` agar gambar bisa dilayani oleh Next.js.
+- `alt` text (dalam contoh `Diagram Arsitektur`) penting untuk aksesibilitas dan SEO.
+
+## 3. Dukungan Gaya Obsidian
+
+Obsidian syntax `![[path/to/image.png]]` secara otomatis dinormalisasi menjadi bentuk Markdown standar, jadi Anda tetap bisa menulis:
+
+```
+![[https://placehold.co/800x460/052e16/34d399.png?text=Diagram+Arsitektur]]
+![[https://placehold.co/800x460/052e16/34d399.png?text=Diagram+Arsitektur|Diagram Arsitektur]]
+```
+
+Renderer akan mengubahnya menjadi sintaks markdown standar dengan alt text "Diagram Arsitektur" dan path absolut ke gambar sebelum dirender.
+
+## 4. Gambar dari URL Eksternal
+
+```markdown
+![Logo OWASP](https://owasp.org/assets/images/logo.png)
+```
+
+- Jalur yang dimulai dengan `http://` atau `https://` akan digunakan apa adanya.
+
+## 5. Tips Optimalisasi
+
+1. **Gunakan format efisien** seperti `.webp` untuk mengurangi ukuran file.
+2. **Aktifkan lazy loading** dengan tetap menggunakan sintaks standar—renderer menambahkan `loading="lazy"` dan `decoding="async"` secara otomatis.
+3. **Pastikan ukuran** gambar tidak melebihi lebar kontainer; renderer sudah mengatur `max-width: 100%` agar gambar responsif.
+4. **Sediakan `alt` text deskriptif** untuk membantu pembaca yang menggunakan screen reader.
+
+## 6. Contoh Lengkap
+
+```markdown
+![Directory Illustration](https://placehold.co/800x460/052e16/34d399.png?text=Directory+Structure)
+
+> [!info]
+> Snapshot diambil sebelum langkah containment dijalankan.
+
+![Sample Rendered Image](https://placehold.co/800x460/001f3f/34d399.png?text=Rendered+Example)
+```
+
+Dengan mengikuti panduan ini, seluruh gambar dalam catatan akan dirender konsisten di website.
+2:["$","div",null,{"className":"min-h-screen bg-black text-green-400 font-mono relative overflow-hidden","children":[["$","$L8",null,{}],["$","div",null,{"className":"relative z-10","children":[["$","$L9",null,{}],["$","$La",null,{"note":{"id":"MARKDOWN_IMAGE_USAGE","slug":"MARKDOWN_IMAGE_USAGE","contentHtml":"","toc":[{"level":1,"text":"Markdown Image Usage Guide","slug":"markdown-image-usage-guide"},{"level":2,"text":"Prosedur Membuat Catatan Bergambar","slug":"prosedur-membuat-catatan-bergambar"},{"level":2,"text":"1. Struktur Direktori","slug":"1-struktur-direktori"},{"level":2,"text":"2. Sintaks Markdown Standar","slug":"2-sintaks-markdown-standar"},{"level":2,"text":"3. Dukungan Gaya Obsidian","slug":"3-dukungan-gaya-obsidian"},{"level":2,"text":"4. Gambar dari URL Eksternal","slug":"4-gambar-dari-url-eksternal"},{"level":2,"text":"5. Tips Optimalisasi","slug":"5-tips-optimalisasi"},{"level":2,"text":"6. Contoh Lengkap","slug":"6-contoh-lengkap"}],"content":"$b","title":"Markdown Image Usage Guide","date":"2024-01-01","category":"guides","tags":["markdown","images","guide"],"relatedNotes":[{"id":"snippet-reference","slug":"snippet-reference","title":"Markdown Snippet Reference","date":"2024-01-10","category":"guides","tags":["markdown","snippets","renderer"],"description":"Contoh snippet markdown yang didukung oleh renderer statis.","cover":"https://placehold.co/1200x630/111827/34d399.png?text=Markdown+Snippet"},{"id":"malware-analysis/static-analysis","slug":"malware-analysis/static-analysis","title":"Static Malware Analysis Techniques","date":"2024-01-30","category":"Malware Analysis","tags":["malware","static-analysis","reverse-engineering","security"],"author":"Malware Analyst"},{"id":"incident-response/playbook","slug":"incident-response/playbook","title":"Incident Response Playbook","date":"2024-01-25","category":"Incident Response","tags":["incident-response","playbook","containment","forensics"],"author":"CSIRT Team"},{"id":"penetration-testing/methodology","slug":"penetration-testing/methodology","title":"Penetration Testing Methodology","date":"2024-01-20","category":"Penetration Testing","tags":["pentest","methodology","security-testing","vulnerability"],"author":"Security Professional"},{"id":"cybersecurity-fundamentals","slug":"cybersecurity-fundamentals","title":"Cybersecurity Fundamentals","date":"2024-01-15","category":"Fundamentals","tags":["cybersecurity","fundamentals","security","basics"],"author":"Security Professional"}],"description":"Panduan resmi menambahkan gambar ke catatan beserta struktur direktori dan pipeline pemrosesan.","cover":"https://placehold.co/1200x630/0f172a/34d399.png?text=Markdown+Image+Guide"}}]]}]]}]
+7:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","1",{"charSet":"utf-8"}],["$","title","2",{"children":"Markdown Image Usage Guide | Angga N. Putra"}],["$","meta","3",{"name":"description","content":"A note on Markdown Image Usage Guide"}],["$","meta","4",{"name":"author","content":"Angga Novryan Putra F."}],["$","meta","5",{"name":"generator","content":"mxz4rt-sec"}],["$","meta","6",{"name":"keywords","content":"SOC Analyst | Penetration Tester | Security Researcher with 3+ years of experience in cybersecurity operations,threat hunting,and penetration testing"}],["$","meta","7",{"name":"creator","content":"Angga Novryan Putra F."}],["$","meta","8",{"name":"publisher","content":"Angga Novryan Putra F."}],["$","link","9",{"rel":"canonical","href":"https://angganovryanputra.github.io/"}],["$","meta","10",{"property":"og:title","content":"Angga Novryan Putra F. - Cybersecurity Professional"}],["$","meta","11",{"property":"og:description","content":"SOC Analyst | Penetration Tester | Security Researcher with 3+ years of experience in cybersecurity operations, threat hunting, and penetration testing."}],["$","meta","12",{"property":"og:url","content":"https://angganovryanputra.github.io/"}],["$","meta","13",{"property":"og:site_name","content":"Angga Novryan Putra F. - Cybersecurity Professional"}],["$","meta","14",{"property":"og:locale","content":"en_US"}],["$","meta","15",{"property":"og:image","content":"https://angganovryanputra.github.io/profile.png"}],["$","meta","16",{"property":"og:image:width","content":"1200"}],["$","meta","17",{"property":"og:image:height","content":"630"}],["$","meta","18",{"property":"og:image:alt","content":"Angga Novryan Putra F. Cybersecurity Portfolio"}],["$","meta","19",{"property":"og:type","content":"website"}],["$","meta","20",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","21",{"name":"twitter:title","content":"Angga Novryan Putra F. - Cybersecurity Professional"}],["$","meta","22",{"name":"twitter:description","content":"SOC Analyst | Penetration Tester | Security Researcher with 3+ years of experience in cybersecurity operations, threat hunting, and penetration testing."}],["$","meta","23",{"name":"twitter:image","content":"https://angganovryanputra.github.io/profile.png"}],["$","link","24",{"rel":"icon","href":"/favicon.ico","type":"image/x-icon","sizes":"any"}],["$","link","25",{"rel":"icon","href":"/favicon-16x16.png","type":"image/png","sizes":"16x16"}],["$","link","26",{"rel":"icon","href":"/favicon-32x32.png","type":"image/png","sizes":"32x32"}],["$","link","27",{"rel":"apple-touch-icon","href":"/apple-touch-icon.png","type":"image/png"}],["$","link","28",{"rel":"android-chrome-192x192","href":"/android-chrome-192x192.png"}],["$","link","29",{"rel":"android-chrome-512x512","href":"/android-chrome-512x512.png"}],["$","meta","30",{"name":"next-size-adjust"}]]
+1:null
